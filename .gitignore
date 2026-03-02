@@ -1,4 +1,13 @@
 
+###> ide ###
+/.idea/
+###< ide ###
+
+###> node / assets ###
+/node_modules/
+/public/build/
+###< node / assets ###
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
