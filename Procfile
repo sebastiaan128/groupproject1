@@ -1,0 +1,1 @@
+tailwind: npm run watch
