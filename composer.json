@@ -60,6 +60,9 @@
     "conflict": {
         "symfony/symfony": "*"
     },
+    "archive": {
+        "exclude": [".env"]
+    },
     "extra": {
         "symfony": {
             "allow-contrib": false,
