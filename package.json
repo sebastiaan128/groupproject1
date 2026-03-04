@@ -1,0 +1,26 @@
+{
+  "name": "groupproject1",
+  "version": "1.0.0",
+  "description": "om dit project te starten moet je dit doen",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i ./assets/input.css -o ./public/css/app.css",
+    "watch": "tailwindcss -i ./assets/input.css -o ./public/css/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastiaan128/groupproject1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sebastiaan128/groupproject1/issues"
+  },
+  "homepage": "https://github.com/sebastiaan128/groupproject1#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  }
+}
