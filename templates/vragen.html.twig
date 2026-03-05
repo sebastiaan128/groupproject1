@@ -1,14 +1,34 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/css/app.css">
-    <title>Vragen</title>
-</head>
-<body>
-{{ include('components/navbar.html.twig') }}
-</body>
-</html>
+<div class="flex mt-7">
+    <div class="flex-1"></div>
+
+    <div class="w-full max-w-6xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl">Questions & Answers</h1>
+            </div>
+            <div>
+                <button class="bg-blue-700 text-white py-2 px-4 rounded-xl whitespace-nowrap pt-3 pb-3">
+                    + New Question
+                </button>
+            </div>
+        </div>
+        <div class="flex items-center justify-start gap-3 mt-7 mb-5">
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                Questions
+            </button>
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                Open
+            </button>
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                Answered
+            </button>
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                My Questions
+            </button>
+        </div>
+
+        {% include 'components/question-card.html.twig' %}
+    </div>
+
+    <div class="flex-1"></div>
+</div>
