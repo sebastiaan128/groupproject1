@@ -8,9 +8,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class VragenController extends AbstractController
 {
-    #[Route('/vragen', name: 'vragen')]
-    public function index(): Response
+    #[Route('/questions', name: 'questions')]
+    public function questions(): Response
     {
-        return $this->render('vragen.html.twig');
+        return $this->render('questions.html.twig');
     }
+
+    #[Route('/create-question', name: 'create-question')]
+    public function createQuestions(): Response
+    {
+        return $this->render('create-question.html.twig');
+    }
+
 }
