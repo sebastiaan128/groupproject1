@@ -53,4 +53,5 @@ final class VragenFactory extends PersistentProxyObjectFactory
             // ->afterInstantiate(function(Vragen $vragen): void {})
         ;
     }
+    
 }

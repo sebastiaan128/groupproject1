@@ -13,4 +13,5 @@ class ChatsController extends AbstractController
     {
         return $this->render('chats.html.twig');
     }
+    
 }

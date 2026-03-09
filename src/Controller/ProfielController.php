@@ -14,3 +14,4 @@ class ProfielController extends AbstractController
         return $this->render('profiel.html.twig');
     }
 }
+

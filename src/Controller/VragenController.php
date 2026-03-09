@@ -13,6 +13,7 @@ class VragenController extends AbstractController
     {
         return $this->render('questions.html.twig');
     }
+    
 
     #[Route('/create-question', name: 'create-question')]
     public function createQuestions(): Response

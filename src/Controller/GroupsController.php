@@ -13,4 +13,5 @@ class GroupsController extends AbstractController
     {
         return $this->render('groups.html.twig');
     }
+    
 }

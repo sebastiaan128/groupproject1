@@ -60,4 +60,5 @@ final class TagsFactory extends PersistentProxyObjectFactory
             // ->afterInstantiate(function(Tags $tags): void {})
         ;
     }
+    
 }
