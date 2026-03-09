@@ -1,13 +1,13 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/css/app.css">
-    <script type="module" src="/js/login.js" defer></script>
+{% extends 'base.html.twig' %}
+{% block title %}Login{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-</head>
+{% block stylesheets %}
+    <script type="module" src="/js/login.js" defer></script>
+{% endblock %}
+
+{% block body %}
 <body class="bg-gray-100">
 <div class="container">
 
@@ -21,7 +21,6 @@
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-gray-300"></div>
                 </div>
-
             </div>
 
             <button id="microsoftLogin"
@@ -39,9 +38,9 @@
 
 </div>
 
+{% block javascripts %}
 <script>
     window.firebaseConfig = {{ firebaseConfig|json_encode|raw }};
 </script>
-
-</body>
-</html>
+{% endblock %}
+{% endblock %}
