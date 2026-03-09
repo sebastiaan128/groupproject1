@@ -6,11 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProfielController extends AbstractController
+class NetworkController extends AbstractController
 {
-    #[Route('/profiel', name: 'profiel')]
+    #[Route('/network', name: 'network')]
     public function index(): Response
     {
-        return $this->render('profiel.html.twig');
+        return $this->render('network.html.twig');
     }
 }

@@ -19,6 +19,111 @@
 }
 
 @layer components {
+    /* Profile page */
+    .main {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        margin: 0 auto;
+        background-color: whitesmoke;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container, .container-two {
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border-radius: 20px;
+        padding: 2%;
+        border: 1px solid #d1d1d1;
+        box-shadow: 0 1px 2px gray;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    .upper {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .fields-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding-left: 10px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .fields {
+        display: flex;
+        gap: 20px;
+    }
+
+    .edit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .edit-btn {
+        background-color: #4F39F6;
+        color: white;
+        transition: 0.3s;
+        text-align: center;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .edit-btn:hover {
+        background-color: #396bf6;
+    }
+
+    .save-cancel {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 20px;
+        box-sizing: border-box;
+    }
+
+    .save-btn, .cancel-btn {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .save-btn {
+        background-color: #4F39F6;
+        color: white;
+    }
+
+    .save-btn:hover {
+        background-color: #396bf6;
+    }
+
+    .cancel-btn {
+        background-color: white;
+        color: black;
+        border: 1px solid #d1d1d1;
+    }
+
+    .cancel-btn:hover {
+        background-color: #f1f1f1;
+    }
+
+
     .navbar-glass {
         background: rgba(255, 255, 255, 0.25);
         backdrop-filter: blur(10px) saturate(180%);

@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class VragenController extends AbstractController
+class QuestionController extends AbstractController
 {
     #[Route('/questions', name: 'questions')]
     public function questions(): Response
@@ -15,9 +15,8 @@ class VragenController extends AbstractController
     }
 
     #[Route('/create-question', name: 'create-question')]
-    public function createQuestions(): Response
+    public function createQuestion(): Response
     {
         return $this->render('create-question.html.twig');
     }
-
 }

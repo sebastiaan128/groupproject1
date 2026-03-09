@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\ProfielRepository;
+use App\Repository\ProfileRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ProfielRepository::class)]
-class Profiel
+#[ORM\Entity(repositoryClass: ProfileRepository::class)]
+class Profile
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,10 +21,10 @@ class Profiel
     private ?string $email = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $studie = null;
+    private ?string $study = null;
 
     #[ORM\Column]
-    private ?int $jaar = null;
+    private ?int $year = null;
 
     #[ORM\Column(length: 255)]
     private ?string $bio = null;
@@ -58,26 +58,26 @@ class Profiel
         return $this;
     }
 
-    public function getStudie(): ?string
+    public function getStudy(): ?string
     {
-        return $this->studie;
+        return $this->study;
     }
 
-    public function setStudie(?string $studie): static
+    public function setStudy(?string $study): static
     {
-        $this->studie = $studie;
+        $this->study = $study;
 
         return $this;
     }
 
-    public function getJaar(): ?int
+    public function getYear(): ?int
     {
-        return $this->jaar;
+        return $this->year;
     }
 
-    public function setJaar(int $jaar): static
+    public function setYear(int $year): static
     {
-        $this->jaar = $jaar;
+        $this->year = $year;
 
         return $this;
     }

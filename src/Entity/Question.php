@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\VragenRepository;
+use App\Repository\QuestionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: VragenRepository::class)]
-class Vragen
+#[ORM\Entity(repositoryClass: QuestionRepository::class)]
+class Question
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,10 +15,10 @@ class Vragen
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $titel = null;
+    private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $beschrijving = null;
+    private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $answers = null;
@@ -40,26 +40,26 @@ class Vragen
         return $this->id;
     }
 
-    public function getTitel(): ?string
+    public function getTitle(): ?string
     {
-        return $this->titel;
+        return $this->title;
     }
 
-    public function setTitel(string $titel): static
+    public function setTitle(string $title): static
     {
-        $this->titel = $titel;
+        $this->title = $title;
 
         return $this;
     }
 
-    public function getBeschrijving(): ?string
+    public function getDescription(): ?string
     {
-        return $this->beschrijving;
+        return $this->description;
     }
 
-    public function setBeschrijving(string $beschrijving): static
+    public function setDescription(string $description): static
     {
-        $this->beschrijving = $beschrijving;
+        $this->description = $description;
 
         return $this;
     }
