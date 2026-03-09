@@ -33,26 +33,20 @@ final class TagsFactory extends PersistentProxyObjectFactory
     #[\Override]
     protected function defaults(): array|callable
     {
+        $tags = [
+            'PHP', 'JavaScript', 'Python', 'Java', 'C#', 'C++', 'Rust',
+            'HTML', 'CSS', 'React', 'Vue', 'Angular', 'Node.js',
+            'Laravel', 'Symfony', 'Django', 'Spring Boot',
+            'MySQL', 'PostgreSQL', 'MongoDB', 'Redis',
+            'Bootstrap', 'Tailwind', 'SCSS',
+            'TypeScript', 'Git', 'Docker', 'AWS', 'Azure',
+            'REST API', 'GraphQL', 'Agile', 'DevOps',
+            'Web Development', 'Mobile Development', 'Data Science',
+            'Machine Learning', 'AI', 'Cloud Computing'
+        ];
+
         return [
-            'bootstrap' => self::faker()->boolean(),
-            'c' => self::faker()->boolean(),
-            'cplus' => self::faker()->boolean(),
-            'csharp' => self::faker()->boolean(),
-            'css' => self::faker()->boolean(),
-            'html' => self::faker()->boolean(),
-            'java' => self::faker()->boolean(),
-            'javascript' => self::faker()->boolean(),
-            'laravel' => self::faker()->boolean(),
-            'mysql' => self::faker()->boolean(),
-            'nodejs' => self::faker()->boolean(),
-            'php' => self::faker()->boolean(),
-            'python' => self::faker()->boolean(),
-            'react' => self::faker()->boolean(),
-            'rust' => self::faker()->boolean(),
-            'scss' => self::faker()->boolean(),
-            'symfony' => self::faker()->boolean(),
-            'tailwind' => self::faker()->boolean(),
-            'typescript' => self::faker()->boolean(),
+            'naam' => self::faker()->randomElement($tags),
         ];
     }
 

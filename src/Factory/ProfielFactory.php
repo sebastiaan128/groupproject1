@@ -31,11 +31,30 @@ final class ProfielFactory extends PersistentProxyObjectFactory
     #[\Override]
     protected function defaults(): array|callable
     {
+        $studies = [
+            "Informatica",
+            "HBO-ICT",
+            "HBO-OPEN-ICT",
+            "Creative Business",
+            "Communicatie",
+            "Commerciële Economie",
+            "Bedrijfskunde",
+            "Finance & Control",
+            "Verpleegkunde",
+            "Social Work",
+            "Leraar Basisonderwijs (PABO)",
+            "Technische Bedrijfskunde",
+            "Built Environment",
+            "Game Development",
+            "Software Development"
+        ];
+
         return [
-            'bio' => self::faker()->realText(50),
+            'name' => self::faker()->firstName() . ' ' . self::faker()->lastName(),
             'email' => self::faker()->unique()->safeEmail(),
+            'studie' => self::faker()->randomElement($studies),
             'jaar' => self::faker()->numberBetween(1, 4),
-            'name' => self::faker()->firstName(),
+            'bio' => self::faker()->sentence(10, true),
         ];
     }
 

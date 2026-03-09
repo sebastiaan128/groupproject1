@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,11 +7,62 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Netwerk</title>
+    <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
 {{ include('components/navbar.html.twig') }}
-<div class="">
-
+<div class="w-100% flex bg-gray-100 justify-items-center">
+    <div class="w-[20%] flex-column gap-2 p-2 bg-white rounded text-center shadow">
+        <h2>Filter</h2>
+        <div class="flex gap-2">
+            <h2>Search Name</h2>
+            <input type="text" placeholder="Name..." class="border border-gray-300 rounded p-2 w-full">
+        </div>
+        <div>
+            <h2>Popular Tags</h2>
+            <div class="flex-column">
+            {% for tag in tags %}
+                <li><span class="">{{ tag.naam }}</span></li>
+            {% endfor %}
+            </div>
+            <div>
+                <h2>Clear filter</h2>
+            </div>
+        </div>
+    </div>
+    <div class="w-[80%] flex-column gap-2 p-2 bg-gray-100 rounded text-center shadow">
+    <div class="w-[100%] flex-column gap-2 p-2 bg-white rounded text-center shadow">
+        <h3>{{ profielen|length }} Students Found</h3>
+    </div>
+    <div class="w-[100%] grid gap-[20px] grid-cols-3 mt-10">
+    {% for profiel in profielen %}
+        <div class="bg-white rounded-[14px] border border-gray-300 hover:border-blue-300 hover:shadow-xl p-4">
+            <div class="flex mb-2">
+                <div class="bg-gray-300 w-[60px] h-[60px] rounded-[50px] text-center leading-[60px]">{{ profiel.name|first|upper }}</div>
+                <div class="ml-10 text-left">
+                <div class="font-bold">
+                    {{ profiel.name }}
+                </div>
+                <div class="text-sm text-gray-600">
+                    {{ profiel.email }}
+                </div>
+                </div>
+            </div>
+            <div class="text-sm text-gray-700">
+                {{ profiel.bio }}
+            </div>
+            {% if profiel.tags is not empty %}
+                <div class="mt-2">
+                    <strong>Tags:</strong>
+                    {% for tag in profiel.tags %}
+                        <span class="inline-block bg-blue-200 rounded px-2 py-1 text-xs mr-1">{{ tag.naam }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    </div>
 </div>
 </body>
 </html>

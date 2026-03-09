@@ -2,14 +2,15 @@
 
 namespace App\Factory;
 
-use App\Entity\Vragen;
+use App\Entity\Antwoorden;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use App\Factory\VragenFactory;
 use App\Factory\ProfielFactory;
 
 /**
- * @extends PersistentProxyObjectFactory<Vragen>
+ * @extends PersistentProxyObjectFactory<Antwoorden>
  */
-final class VragenFactory extends PersistentProxyObjectFactory
+final class AntwoordenFactory extends PersistentProxyObjectFactory
 {
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
@@ -21,7 +22,7 @@ final class VragenFactory extends PersistentProxyObjectFactory
     #[\Override]
     public static function class(): string
     {
-        return Vragen::class;
+        return Antwoorden::class;
     }
 
     /**
@@ -33,12 +34,10 @@ final class VragenFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'titel' => rtrim(self::faker()->sentence(6), '.') . '?',
             'beschrijving' => self::faker()->paragraphs(2, true),
-            'upvotes' => self::faker()->numberBetween(0, 100),
-            'downvotes' => self::faker()->numberBetween(0, 50),
-            'views' => self::faker()->numberBetween(1, 500),
-            'status' => self::faker()->randomElement(['Open', 'Closed', 'Answering']),
+            'upvotes' => self::faker()->numberBetween(0, 50),
+            'downvotes' => self::faker()->numberBetween(0, 20),
+            'vraag' => VragenFactory::random(),
             'profiel' => ProfielFactory::random(),
         ];
     }
@@ -50,7 +49,7 @@ final class VragenFactory extends PersistentProxyObjectFactory
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Vragen $vragen): void {})
+            // ->afterInstantiate(function(Antwoorden $antwoorden): void {})
         ;
     }
 }
