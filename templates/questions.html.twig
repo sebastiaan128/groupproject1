@@ -1,0 +1,35 @@
+<div class="flex mt-7">
+    <div class="flex-1"></div>
+
+    <div class="w-full max-w-6xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl">Questions & Answers</h1>
+            </div>
+            <div>
+                <a href="{{ path('create-question') }}"
+                   class="bg-blue-700 text-white py-3 px-4 rounded-xl inline-block text-center">
+                    + New Question
+                </a>
+            </div>
+        </div>
+        <div class="flex items-center justify-start gap-3 mt-7 mb-5">
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                Questions
+            </button>
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                Open
+            </button>
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                Answered
+            </button>
+            <button class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl">
+                My Questions
+            </button>
+        </div>
+
+        {% include 'components/question-card.html.twig' %}
+    </div>
+
+    <div class="flex-1"></div>
+</div>
