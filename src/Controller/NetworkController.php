@@ -6,12 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ChatsController extends AbstractController
+class NetworkController extends AbstractController
 {
-    #[Route('/chats', name: 'chats')]
+    #[Route('/network', name: 'network')]
     public function index(): Response
     {
-        return $this->render('chats.html.twig');
+        return $this->render('network.html.twig');
     }
     
 }
