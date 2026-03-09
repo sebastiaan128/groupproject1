@@ -108,3 +108,4 @@ class Tags
         return $this;
     }
 }
+

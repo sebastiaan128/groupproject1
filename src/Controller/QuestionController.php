@@ -13,6 +13,7 @@ class QuestionController extends AbstractController
     {
         return $this->render('questions.html.twig');
     }
+    
 
     #[Route('/create-question', name: 'create-question')]
     public function createQuestion(): Response

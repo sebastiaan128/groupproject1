@@ -13,4 +13,5 @@ class NetworkController extends AbstractController
     {
         return $this->render('network.html.twig');
     }
+    
 }
