@@ -54,7 +54,7 @@ final class ProfielFactory extends PersistentProxyObjectFactory
             'email' => self::faker()->unique()->safeEmail(),
             'studie' => self::faker()->randomElement($studies),
             'jaar' => self::faker()->numberBetween(1, 4),
-            'bio' => self::faker()->sentence(10, true),
+            'bio' => substr(self::faker()->sentence(10, true), 0, 249),
         ];
     }
 

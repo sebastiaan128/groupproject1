@@ -34,7 +34,7 @@ final class AntwoordenFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'beschrijving' => self::faker()->paragraphs(2, true),
+            'beschrijving' => substr(self::faker()->paragraph(2), 0, 250),
             'upvotes' => self::faker()->numberBetween(0, 50),
             'downvotes' => self::faker()->numberBetween(0, 20),
             'vraag' => VragenFactory::random(),

@@ -33,7 +33,7 @@ final class VragenFactory extends PersistentProxyObjectFactory
     protected function defaults(): array|callable
     {
         return [
-            'titel' => rtrim(self::faker()->sentence(6), '.') . '?',
+            'titel' => substr(rtrim(self::faker()->sentence(4), '.'), 0, 45) . '?',
             'beschrijving' => self::faker()->paragraphs(2, true),
             'upvotes' => self::faker()->numberBetween(0, 100),
             'downvotes' => self::faker()->numberBetween(0, 50),

@@ -1,6 +1,7 @@
 
 /.idea/
 /node_modules/
+/public/css/app.css
 
 ###> symfony/framework-bundle ###
 /.env
