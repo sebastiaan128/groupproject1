@@ -3,7 +3,8 @@
     var STAR_COUNT     = 180;
     var MAX_SHOOTING   = 5;
     var SPAWN_INTERVAL = 2000;
-
+    var MAX_SPARKLES   = 18;
+    var SPARKLE_SPAWN  = 400;
 
     function rnd(min, max) { return min + Math.random() * (max - min); }
 
@@ -54,6 +55,52 @@
         };
     }
 
+    function makeSparkle(w, h) {
+        var totalFrames = Math.floor(rnd(60, 120));
+        return {
+            x:      rnd(20, w - 20),
+            y:      rnd(20, h - 20),
+            size:   rnd(4, 10),
+            color:  COLORS[Math.floor(Math.random() * COLORS.length)],
+            frame:  0,
+            total:  totalFrames,
+            rotate: rnd(0, Math.PI),
+        };
+    }
+
+    // Draw a 4-pointed sparkle star
+    function drawSparkleShape(ctx, x, y, size, rotate, color, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotate);
+        ctx.globalAlpha = alpha;
+        ctx.shadowBlur  = 12;
+        ctx.shadowColor = color;
+
+        // Outer 4-point star
+        ctx.beginPath();
+        var points = 4;
+        for (var i = 0; i < points * 2; i++) {
+            var angle = (i * Math.PI) / points;
+            var r = (i % 2 === 0) ? size : size * 0.2;
+            if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+            else         ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Bright center dot
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.18, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.globalAlpha = alpha * 0.9;
+        ctx.shadowBlur  = 6;
+        ctx.shadowColor = '#ffffff';
+        ctx.fill();
+
+        ctx.restore();
+    }
 
     function drawStars(ctx, stars) {
         var dark = isDark();
@@ -126,12 +173,39 @@
         }
     }
 
+    function drawSparkles(ctx, sparkles, w, h, ts, nextSparkle) {
+        for (var i = sparkles.length - 1; i >= 0; i--) {
+            var sp = sparkles[i];
+            sp.frame++;
+            var progress = sp.frame / sp.total;
+
+            // Ease in for first 30%, hold until 70%, ease out
+            var alpha;
+            if (progress < 0.3) {
+                alpha = progress / 0.3;
+            } else if (progress < 0.7) {
+                alpha = 1;
+            } else {
+                alpha = (1 - progress) / 0.3;
+            }
+            alpha = Math.max(0, Math.min(1, alpha)) * 0.85;
+
+            var scale = alpha < 1 ? alpha : 1;
+            drawSparkleShape(ctx, sp.x, sp.y, sp.size * scale, sp.rotate + progress * Math.PI * 0.5, sp.color, alpha);
+
+            if (sp.frame >= sp.total) sparkles.splice(i, 1);
+        }
+        return nextSparkle;
+    }
+
 
     function init(canvas) {
-        var ctx       = canvas.getContext('2d');
-        var stars     = [];
-        var shots     = [];
-        var nextSpawn = 0;
+        var ctx          = canvas.getContext('2d');
+        var stars        = [];
+        var shots        = [];
+        var sparkles     = [];
+        var nextSpawn    = 0;
+        var nextSparkle  = 0;
 
         function resize() {
             canvas.width  = window.innerWidth;
@@ -156,6 +230,13 @@
             }
 
             drawShots(ctx, shots, canvas.width, canvas.height);
+
+            if (ts > nextSparkle && sparkles.length < MAX_SPARKLES) {
+                sparkles.push(makeSparkle(canvas.width, canvas.height));
+                nextSparkle = ts + SPARKLE_SPAWN + rnd(-150, 150);
+            }
+
+            drawSparkles(ctx, sparkles, canvas.width, canvas.height, ts, nextSparkle);
 
             requestAnimationFrame(animate);
         }
