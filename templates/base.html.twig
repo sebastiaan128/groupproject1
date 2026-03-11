@@ -39,28 +39,20 @@
         <script src="/js/background-beams.js"></script>
         <script>
             (function () {
-                var btn = document.getElementById('theme-toggle');
-                var iconSun = document.getElementById('icon-sun');
-                var iconMoon = document.getElementById('icon-moon');
-
+                var btn     = document.getElementById('theme-toggle');
                 var favicon = document.getElementById('favicon');
 
                 function applyTheme(isDark) {
                     if (isDark) {
                         document.documentElement.classList.add('dark');
-                        iconSun.classList.remove('hidden');
-                        iconMoon.classList.add('hidden');
                         if (favicon) favicon.href = '/assets/logo/favicon_Light.png';
                     } else {
                         document.documentElement.classList.remove('dark');
-                        iconSun.classList.add('hidden');
-                        iconMoon.classList.remove('hidden');
                         if (favicon) favicon.href = '/assets/logo/favicon_Dark.png';
                     }
                 }
 
                 if (btn) {
-                    applyTheme(document.documentElement.classList.contains('dark'));
                     btn.addEventListener('click', function () {
                         var isDark = document.documentElement.classList.contains('dark');
                         localStorage.setItem('theme', isDark ? 'light' : 'dark');

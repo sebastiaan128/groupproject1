@@ -75,6 +75,20 @@
                 Sign in with Microsoft
             </button>
 
+            <div class="flex items-center gap-3 my-4">
+                <span class="flex-1 h-px bg-gray-200 dark:bg-white/10"></span>
+                <span class="text-xs text-gray-400 dark:text-gray-500">or</span>
+                <span class="flex-1 h-px bg-gray-200 dark:bg-white/10"></span>
+            </div>
+
+            <a href="{{ path('auth_guest') }}"
+               class="w-full flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10 py-3 rounded-xl font-medium transition-all duration-200 text-sm sm:text-base">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+                Continue as Guest
+            </a>
+
             <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-5">
                 By signing in you agree to our terms of service
             </p>
