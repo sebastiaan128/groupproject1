@@ -20,4 +20,5 @@ class HomeController extends AbstractController
             'total_vragen'   => count($vragenRepository->findAll()),
         ]);
     }
+
 }
