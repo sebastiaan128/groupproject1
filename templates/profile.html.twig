@@ -3,87 +3,106 @@
 {% block title %}My Profile{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-100 dark:bg-gray-900 py-10 px-4">
-    <div class="max-w-2xl mx-auto flex flex-col gap-5">
+<div class="main">
+    <h1>My Profile</h1>
+    <div class="container dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div class="upper">
+            <div>
 
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">My Profile</h1>
-
-        {# Profile Info Card #}
-        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-6">
-
-            {# Avatar #}
-            <div class="flex items-center gap-4">
-                <div class="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
-                    </svg>
+                <a href="{{ path('profile') }}"
+                    class="hidden sm:flex avatar-glass w-17.5 h-17.5 rounded-full items-center justify-center text-sm font-semibold cursor-pointer transition-all text-gray-700 dark:text-gray-200">
+                    <img id="desktop-avatar" src="/assets/logo/profile.png" alt="User Avatar"
+                        class="w-full h-full rounded-full object-cover">
+                </a>
+            </div>
+            <div class="fields-wrapper">
+                <div class="edit-btn">
+                    <h4>Edit</h4>
                 </div>
-                <div>
-                    <p class="font-semibold text-gray-900 dark:text-gray-100">Your Name</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Upload a photo coming soon</p>
+                <div class="fields-col">
+                    <div class="field">
+                        <h3>Name</h3>
+                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                            <input type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="field ">
+                        <h3>Email</h3>
+                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                            <input type="text" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="fields-row">
+                    <div class="field">
+                        <h3>Study</h3>
+                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                            <input type="text" disabled>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <h3>Year</h3>
+                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                            <input type="text" disabled>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {# Name & Email #}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="flex flex-col gap-1">
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-                    <input type="text" placeholder="Your name"
-                           class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <input type="email" placeholder="your@email.com"
-                           class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
+        </div>
+        <div class="field">
+            <h3>Bio</h3>
+            <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                <input type="text" disabled>
             </div>
-
-            {# Study Program & Year #}
-            <div class="grid grid-cols-2 gap-4">
-                <div class="flex flex-col gap-1">
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Study Program</label>
-                    <input type="text" placeholder="e.g. Computer Science"
-                           class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Year</label>
-                    <input type="text" placeholder="e.g. 2"
-                           class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                </div>
-            </div>
-
-            {# Bio #}
-            <div class="flex flex-col gap-1">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
-                <textarea rows="3" placeholder="Tell something about yourself..."
-                          class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+        </div>
+    </div>
+    <div class="container-two dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div class="edit-header">
+            <div class="field">
+                <h2>Knowledge Tags</h2>
             </div>
 
         </div>
-
-        {# Knowledge Tags Card #}
-        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col gap-4">
-            <div class="flex items-center justify-between">
-                <h2 class="font-semibold text-gray-900 dark:text-gray-100">Knowledge Tags</h2>
-                <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-1.5 rounded-xl transition-colors">
-                    Edit
-                </button>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <span class="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700 rounded-lg px-3 py-1 text-sm">1234</span>
-            </div>
+        <div class="flex flex-wrap gap-2">
+            <span
+                class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">React</span>
+            <span
+                class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded-lg py-0.5 px-2 text-sm">Javascript</span>
+            <span
+                class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-lg py-0.5 px-2 text-sm">SQL</span>
         </div>
-
-        {# Action Buttons #}
-        <div class="flex gap-3">
-            <button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition-colors">
-                Save
-            </button>
-            <button class="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold py-2.5 rounded-xl transition-colors">
-                Cancel
-            </button>
+    </div>
+    <div class="save-cancel">
+        <div class="btn-save">
+            <h3>Save</h3>
         </div>
-
+        <div class="btn-cancel dark:border-gray-700 bg-white dark:bg-gray-800">
+            <h3>Cancel</h3>
+        </div>
     </div>
 </div>
+<script>
+    document.querySelector('.edit-btn').addEventListener('click', function () {
+        const inputs = document.querySelectorAll('input');
+        const isDisabled = inputs[0].disabled;
+
+        inputs.forEach(input => {
+            input.disabled = !isDisabled;
+            const wrapper = input.closest('div');
+            if (isDisabled) {
+                wrapper.classList.add('input-active');
+                wrapper.classList.remove('border-gray-300');
+                // Achtergrond toevoegen bij edit
+                wrapper.classList.add('bg-gray-50', 'dark:bg-gray-700');
+            } else {
+                wrapper.classList.remove('input-active');
+                wrapper.classList.add('border-gray-300');
+                // Achtergrond verwijderen bij done
+                wrapper.classList.remove('bg-gray-50', 'dark:bg-gray-700');
+            }
+        });
+
+        this.textContent = isDisabled ? 'Done' : 'Edit';
+    });
+</script>
 {% endblock %}
