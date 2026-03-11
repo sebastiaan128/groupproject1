@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @layer base {
     .bg-beams-canvas {
         position: fixed;
@@ -19,7 +17,6 @@
 }
 
 @layer components {
-    /* Profile page */
     body {
     margin: 0;
     padding: 0;
@@ -75,6 +72,8 @@ input {
     align-items: center;
 }
 .edit-btn {
+    align-self: self-end;
+    width: 25%;
     background-color: #4F39F6;
     color: white;
     transition: 0.3s;
@@ -84,6 +83,7 @@ input {
     cursor: pointer;
 }
 .edit-btn:hover {
+        width: 50%;
     background-color: #396bf6;
 }
 .save-cancel {
@@ -120,7 +120,6 @@ input {
 h3 {
     margin: 10px 0;
 }
-
 
     .navbar-glass {
         background: rgba(255, 255, 255, 0.25);

@@ -8,6 +8,7 @@
     <div class="container dark:border-gray-700 bg-white dark:bg-gray-800">
         <div class="upper">
             <div>
+
                 <a href="{{ path('profile') }}"
                     class="hidden sm:flex avatar-glass w-17.5 h-17.5 rounded-full items-center justify-center text-sm font-semibold cursor-pointer transition-all text-gray-700 dark:text-gray-200">
                     <img id="desktop-avatar" src="/assets/logo/profile.png" alt="User Avatar"
@@ -15,17 +16,20 @@
                 </a>
             </div>
             <div class="fields-wrapper">
+                <div class="edit-btn">
+                    <h4>Edit</h4>
+                </div>
                 <div class="fields-col">
                     <div class="field">
                         <h3>Name</h3>
                         <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text">
+                            <input type="text" disabled>
                         </div>
                     </div>
                     <div class="field ">
                         <h3>Email</h3>
                         <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text">
+                            <input type="text" disabled>
                         </div>
                     </div>
                 </div>
@@ -33,13 +37,13 @@
                     <div class="field">
                         <h3>Study</h3>
                         <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text">
+                            <input type="text" disabled>
                         </div>
                     </div>
                     <div class="field">
                         <h3>Year</h3>
                         <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text">
+                            <input type="text" disabled>
                         </div>
                     </div>
                 </div>
@@ -48,7 +52,7 @@
         <div class="field">
             <h3>Bio</h3>
             <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                <input type="text">
+                <input type="text" disabled>
             </div>
         </div>
     </div>
@@ -57,12 +61,15 @@
             <div class="field">
                 <h2>Knowledge Tags</h2>
             </div>
-            <h4 class="edit-btn">Edit</h4>
+
         </div>
         <div class="flex flex-wrap gap-2">
-            <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">React</span>
-            <span class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded-lg py-0.5 px-2 text-sm">Javascript</span>
-            <span class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-lg py-0.5 px-2 text-sm">SQL</span>
+            <span
+                class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">React</span>
+            <span
+                class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded-lg py-0.5 px-2 text-sm">Javascript</span>
+            <span
+                class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-lg py-0.5 px-2 text-sm">SQL</span>
         </div>
     </div>
     <div class="save-cancel">
@@ -74,4 +81,28 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelector('.edit-btn').addEventListener('click', function () {
+        const inputs = document.querySelectorAll('input');
+        const isDisabled = inputs[0].disabled;
+
+        inputs.forEach(input => {
+            input.disabled = !isDisabled;
+            const wrapper = input.closest('div');
+            if (isDisabled) {
+                wrapper.classList.add('input-active');
+                wrapper.classList.remove('border-gray-300');
+                // Achtergrond toevoegen bij edit
+                wrapper.classList.add('bg-gray-50', 'dark:bg-gray-700');
+            } else {
+                wrapper.classList.remove('input-active');
+                wrapper.classList.add('border-gray-300');
+                // Achtergrond verwijderen bij done
+                wrapper.classList.remove('bg-gray-50', 'dark:bg-gray-700');
+            }
+        });
+
+        this.textContent = isDisabled ? 'Done' : 'Edit';
+    });
+</script>
 {% endblock %}
