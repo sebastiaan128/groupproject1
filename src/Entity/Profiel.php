@@ -32,6 +32,12 @@ class Profiel
     #[ORM\Column(name: 'Bio', length: 250)]
     private ?string $bio = null;
 
+    #[ORM\Column(name: 'FirebaseUid', length: 128, unique: true, nullable: true)]
+    private ?string $firebaseUid = null;
+
+    #[ORM\Column(name: 'CreatedAt', type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
     /**
      * @var Collection<int, Vragen>
      */
@@ -203,6 +209,30 @@ class Profiel
     public function removeTag(Tags $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    public function getFirebaseUid(): ?string
+    {
+        return $this->firebaseUid;
+    }
+
+    public function setFirebaseUid(string $firebaseUid): static
+    {
+        $this->firebaseUid = $firebaseUid;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

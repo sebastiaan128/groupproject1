@@ -10,7 +10,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class AuthSubscriber implements EventSubscriberInterface
 {
-    private const PUBLIC_ROUTES = ['login', 'auth_verify'];
+    private const PUBLIC_ROUTES = ['login', 'auth_verify', 'auth_guest'];
 
     public function __construct(private RouterInterface $router) {}
 

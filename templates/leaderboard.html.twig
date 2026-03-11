@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+{% block title %}Leaderboard — TribeChat{% endblock %}
+
+{% block body %}
+<div class="max-w-6xl mx-auto px-4 sm:px-8 py-10">
+
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">Leaderboard</h1>
+        <p class="mt-2 text-gray-500 dark:text-gray-400 text-base">Top contributors ranked by questions and answers.</p>
+    </div>
+
+    {% if profielen|length > 0 %}
+
+    {# ── Podium (top 3) ── #}
+    <div class="flex items-end justify-center gap-6 mb-12 px-4">
+
+        {# 2nd place #}
+        {% if profielen[1] is defined %}
+            {% set p2 = profielen[1] %}
+            {% set s2 = p2.vragen|length + p2.antwoorden|length %}
+            <div class="flex flex-col items-center gap-3 w-[30%]">
+                <span class="text-3xl">🥈</span>
+                <div class="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-2xl font-bold text-gray-600 dark:text-gray-300 ring-4 ring-gray-300 dark:ring-gray-600">
+                    {{ p2.name|split(' ')|first|first|upper }}
+                </div>
+                <p class="text-base font-semibold text-gray-800 dark:text-gray-200 text-center truncate w-full">{{ p2.name|split(' ')|first }}</p>
+                <span class="text-sm font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ s2 }} pts</span>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-t-2xl h-28 flex items-center justify-center">
+                    <span class="text-4xl font-black text-gray-400 dark:text-gray-500">2</span>
+                </div>
+            </div>
+        {% endif %}
+
+        {# 1st place — tallest #}
+        {% set p1 = profielen[0] %}
+        {% set s1 = p1.vragen|length + p1.antwoorden|length %}
+        <div class="flex flex-col items-center gap-3 w-[36%]">
+            <span class="text-4xl">👑</span>
+            <div class="w-24 h-24 rounded-full bg-yellow-100 dark:bg-yellow-500/20 flex items-center justify-center text-3xl font-bold text-yellow-600 dark:text-yellow-400 ring-4 ring-yellow-400 dark:ring-yellow-500">
+                {{ p1.name|split(' ')|first|first|upper }}
+            </div>
+            <p class="text-lg font-bold text-gray-900 dark:text-white text-center truncate w-full">{{ p1.name|split(' ')|first }}</p>
+            <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/20 px-3 py-1 rounded-full">{{ s1 }} pts</span>
+            <div class="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 rounded-t-2xl h-44 flex items-center justify-center shadow-xl">
+                <span class="text-5xl font-black text-white">1</span>
+            </div>
+        </div>
+
+        {# 3rd place #}
+        {% if profielen[2] is defined %}
+            {% set p3 = profielen[2] %}
+            {% set s3 = p3.vragen|length + p3.antwoorden|length %}
+            <div class="flex flex-col items-center gap-3 w-[30%]">
+                <span class="text-3xl">🥉</span>
+                <div class="w-16 h-16 rounded-full bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center text-xl font-bold text-orange-600 dark:text-orange-400 ring-4 ring-orange-300 dark:ring-orange-600">
+                    {{ p3.name|split(' ')|first|first|upper }}
+                </div>
+                <p class="text-base font-semibold text-gray-800 dark:text-gray-200 text-center truncate w-full">{{ p3.name|split(' ')|first }}</p>
+                <span class="text-sm font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ s3 }} pts</span>
+                <div class="w-full bg-orange-200 dark:bg-orange-900/40 rounded-t-2xl h-20 flex items-center justify-center">
+                    <span class="text-4xl font-black text-orange-400 dark:text-orange-500">3</span>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+    {# ── Rest of the list (4th+) ── #}
+    {% if profielen|length > 3 %}
+    <div class="flex flex-col gap-3">
+        {% for profiel in profielen %}
+            {% if loop.index > 3 %}
+                {% set isMe = profiel.id == current_profiel_id %}
+                {% set vragenCount = profiel.vragen|length %}
+                {% set antwoordenCount = profiel.antwoorden|length %}
+                {% set score = vragenCount + antwoordenCount %}
+
+                <div class="flex items-center gap-4 bg-white dark:bg-gray-800 border {% if isMe %}border-indigo-400 dark:border-indigo-500{% else %}border-gray-200 dark:border-gray-700{% endif %} rounded-2xl px-5 py-4 shadow-sm">
+
+                    <div class="w-8 shrink-0 text-center">
+                        <span class="text-sm font-bold text-gray-400 dark:text-gray-500">#{{ loop.index }}</span>
+                    </div>
+
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center shrink-0 text-base font-bold text-indigo-600 dark:text-indigo-400">
+                        {{ profiel.name|split(' ')|first|first|upper }}
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 dark:text-white truncate">
+                            {{ profiel.name }}
+                            {% if isMe %}<span class="ml-2 text-xs font-medium text-indigo-500 dark:text-indigo-400">(you)</span>{% endif %}
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">{{ profiel.studie ?: 'HBO-ICT' }}{% if profiel.jaar %} · Year {{ profiel.jaar }}{% endif %}</p>
+                    </div>
+
+                    <div class="hidden sm:flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 shrink-0">
+                        <span><span class="font-semibold text-gray-700 dark:text-gray-200">{{ vragenCount }}</span> Q</span>
+                        <span><span class="font-semibold text-gray-700 dark:text-gray-200">{{ antwoordenCount }}</span> A</span>
+                    </div>
+
+                    <div class="shrink-0 ml-2">
+                        <span class="bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-sm font-bold px-3 py-1 rounded-full">
+                            {{ score }}
+                        </span>
+                    </div>
+
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% else %}
+        <p class="text-center text-gray-400 dark:text-gray-500 py-10">No users yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
