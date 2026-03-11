@@ -2,6 +2,7 @@
 /.idea/
 /node_modules/
 /public/css/app.css
+/config/firebase-credentials.json
 
 ###> symfony/framework-bundle ###
 /.env
