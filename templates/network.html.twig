@@ -3,23 +3,23 @@
 {% block title %}Network{% endblock %}
 
 {% block body %}
-<div class="w-full flex bg-gray-100 dark:bg-gray-900 min-h-screen">
+<div class="w-full flex min-h-screen">
 
-    <div class="w-[20%] flex flex-col gap-2 p-4 bg-white dark:bg-gray-800 shadow text-center">
+    <div class="w-[20%] flex flex-col ml-4 gap-2 p-4 text-center">
         <h2 class="font-bold text-gray-800 dark:text-gray-100">Filter</h2>
         <div class="flex flex-col gap-1 text-left">
             <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Search Name</label>
-            <input type="text" placeholder="Name..." class="border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl p-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="text" id="search-name" placeholder="Name..." class="border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl p-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
         </div>
         <div class="flex flex-col gap-2 text-left mt-2">
-            <h2 class="text-sm font-medium text-gray-700 dark:text-gray-300">Popular Tags</h2>
-            <div class="flex flex-col gap-1">
-                {% for tag in tags|default([]) %}
-                    <span class="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded-lg px-2 py-1 text-xs">{{ tag.naam }}</span>
+            <h2 class="self-center text-sm font-medium text-gray-700 dark:text-gray-300">Popular Tags</h2>
+            <div class="flex flex-col items-center gap-1">
+                {% for tag in tags|slice(0, 10) %}
+                    <button data-tag="{{ tag.naam }}" onclick="selectTag({{ tag.naam | json_encode }})" class="w-[80%] bg-white dark:bg-gray-800 rounded-lg text-sm px-2 py-1 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all">{{ tag.naam }}</button>
                 {% endfor %}
             </div>
         </div>
-        <button class="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors">
+        <button id="clear-filter" class="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors">
             Clear filter
         </button>
     </div>
@@ -27,12 +27,12 @@
     <div class="w-[80%] flex flex-col gap-4 p-4">
 
         <div class="w-full bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 px-4 py-3 shadow-sm">
-            <h3 class="text-sm text-gray-600 dark:text-gray-400 font-medium">{{ profielen|default([])|length }} Students Found</h3>
+            <h3 id="profielen-count" class="text-sm text-gray-600 dark:text-gray-400 font-medium">{{ profielen|default([])|length }} Students Found</h3>
         </div>
 
-        <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="profielen-container" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {% for profiel in profielen|default([]) %}
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all p-4 flex flex-col gap-3">
+                <div class="profiel-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all p-4 flex flex-col gap-3">
                     <div class="flex items-center gap-3">
                         <div class="bg-gray-200 dark:bg-gray-700 w-12 h-12 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-lg shrink-0">
                             {{ profiel.name|first|upper }}
@@ -56,4 +56,87 @@
 
     </div>
 </div>
+
+<script>
+let selectedTag = null;
+
+function filterProfielen() {
+    const searchInput = document.getElementById('search-name');
+    const container = document.getElementById('profielen-container');
+    const countElement = document.getElementById('profielen-count');
+    const profielCards = container.querySelectorAll('.profiel-card');
+    const searchTerm = searchInput.value.toLowerCase();
+    let visibleCount = 0;
+
+    profielCards.forEach(card => {
+        const nameElement = card.querySelector('.font-semibold');
+        const name = nameElement ? nameElement.textContent.toLowerCase() : '';
+        let hasMatch = name.includes(searchTerm);
+
+        if (!hasMatch) {
+            const tagElements = card.querySelectorAll('.flex.flex-wrap span');
+            tagElements.forEach(tagEl => {
+                if (tagEl.textContent.toLowerCase().includes(searchTerm)) {
+                    hasMatch = true;
+                }
+            });
+        }
+
+        if (hasMatch) {
+            card.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    countElement.textContent = visibleCount + ' Students Found';
+}
+
+function selectTag(tagNaam) {
+    const searchInput = document.getElementById('search-name');
+    if (selectedTag === tagNaam) {
+        searchInput.value = '';
+        selectedTag = null;
+    } else {
+        searchInput.value = tagNaam;
+        selectedTag = tagNaam;
+    }
+    document.querySelectorAll('button[data-tag]').forEach(btn => {
+        if (btn.getAttribute('data-tag') === selectedTag) {
+            btn.classList.add('bg-indigo-500', 'text-white', 'border-indigo-500');
+            btn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-gray-100', 'border-gray-200', 'dark:border-gray-700');
+        } else {
+            btn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-gray-100', 'border-gray-200', 'dark:border-gray-700');
+            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+        }
+    });
+    filterProfielen();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-name');
+    const clearButton = document.getElementById('clear-filter');
+
+    searchInput.addEventListener('input', function() {
+        selectedTag = null;
+        document.querySelectorAll('button[data-tag]').forEach(btn => {
+            btn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-gray-100', 'border-gray-200', 'dark:border-gray-700');
+            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+        });
+        filterProfielen();
+    });
+
+    clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        selectedTag = null;
+        document.querySelectorAll('button[data-tag]').forEach(btn => {
+            btn.classList.add('bg-indigo-100', 'dark:bg-indigo-900/40');
+            btn.classList.remove('bg-indigo-300', 'dark:bg-indigo-700');
+        });
+        filterProfielen();
+    });
+});
+</script>
+
 {% endblock %}
