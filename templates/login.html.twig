@@ -5,27 +5,68 @@
 
 {% block stylesheets %}
     <script type="module" src="/js/login.js" defer></script>
+    <style>
+        #bg-sparkles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .login-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+    <script>
+        (function () {
+            var isDark = document.documentElement.classList.contains('dark');
+            document.addEventListener('DOMContentLoaded', function () {
+                var canvas = document.getElementById('bg-sparkles');
+                if (canvas) {
+                    canvas.dataset.particleColor = isDark ? '#ffffff' : '#6b7280';
+                }
+            });
+        })();
+    </script>
 {% endblock %}
 
 {% block body %}
-<body class="bg-gray-100">
-<div class="container">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+    <canvas id="bg-sparkles" data-sparkles data-particle-density="700" data-min-size="0.4" data-max-size="1.4" data-speed="1"></canvas>
 
-    <div class="flex justify-center items-center min-h-screen">
-        <div class="bg-white shadow rounded-lg w-full max-w-md p-8">
-            <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+    <button id="theme-toggle" aria-label="Toggle dark mode"
+            class="fixed top-4 right-4 z-50 w-9 h-9 rounded-full flex items-center justify-center bg-white/80 dark:bg-white/10 border border-gray-200 dark:border-white/10 shadow backdrop-blur-sm transition-all hover:scale-110">
+        <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" class="hidden w-4 h-4 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.71.71M6.34 17.66l-.71.71m12.73 0-.71-.71M6.34 6.34l-.71-.71M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7z"/>
+        </svg>
+        <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
 
-            <div id="error" class="hidden mb-4 text-red-600 text-sm text-center"></div>
+    <div class="login-wrapper flex flex-col justify-center items-center min-h-screen gap-6 px-4 py-8">
 
-            <div class="relative my-4">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-300"></div>
-                </div>
-            </div>
+        <div class="flex flex-col items-center">
+            <img src="/assets/logo/Logo_Light.png"
+                 alt="TribeChat"
+                 class="hidden dark:block h-16 sm:h-20 w-auto drop-shadow-xl">
+            <img src="/assets/logo/Logo_Dark.png"
+                 alt="TribeChat"
+                 class="block dark:hidden h-16 sm:h-20 w-auto drop-shadow-xl">
+        </div>
+
+        <div class="bg-white dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-2xl rounded-2xl max-w-lg w-full h-full p-6 sm:p-8">
+
+            <h2 class="text-xl sm:text-2xl font-bold text-center mb-2 text-gray-900 dark:text-white">Welcome back</h2>
+            <p class="text-center text-sm text-gray-500 dark:text-gray-400 mb-6">Sign in to continue to TribeChat</p>
+
+            <div id="error" class="hidden mb-4 text-red-500 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/40 rounded-xl px-4 py-2.5"></div>
 
             <button id="microsoftLogin"
-                    class="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-50 font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21">
+                    class="w-full flex items-center justify-center gap-3 bg-gray-900 hover:bg-gray-800 dark:bg-white/10 dark:hover:bg-white/20 text-white border border-transparent dark:border-white/10 py-3 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 21 21">
                     <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
                     <rect x="11" y="1" width="9" height="9" fill="#00a4ef"/>
                     <rect x="1" y="11" width="9" height="9" fill="#7fba00"/>
@@ -33,10 +74,29 @@
                 </svg>
                 Sign in with Microsoft
             </button>
+
+            <div class="flex items-center gap-3 my-4">
+                <span class="flex-1 h-px bg-gray-200 dark:bg-white/10"></span>
+                <span class="text-xs text-gray-400 dark:text-gray-500">or</span>
+                <span class="flex-1 h-px bg-gray-200 dark:bg-white/10"></span>
+            </div>
+
+            <a href="{{ path('auth_guest') }}"
+               class="w-full flex items-center justify-center gap-3 bg-gray-100 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10 py-3 rounded-xl font-medium transition-all duration-200 text-sm sm:text-base">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+                Continue as Guest
+            </a>
+
+            <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-5">
+                By signing in you agree to our terms of service
+            </p>
         </div>
     </div>
-
 </div>
+
+<script src="/js/sparkles.js"></script>
 
 {% block javascripts %}
 <script>

@@ -32,8 +32,10 @@
                 My Questions
             </button>
         </div>
+        {% for vraag in vragen %}
+            {% include 'components/question-card.html.twig' with { vraag: vraag } %}
+        {% endfor %}
 
-        {% include 'components/question-card.html.twig' %}
     </div>
 
     <div class="flex-1"></div>

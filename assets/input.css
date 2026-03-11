@@ -120,6 +120,144 @@ input {
 h3 {
     margin: 10px 0;
 }
+    /* Theme toggle — hamburger btn (mobile) */
+    .theme-toggle-btn {
+        position: relative;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+        overflow: hidden;
+    }
+
+    .theme-toggle-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+
+    .dark .theme-toggle-btn {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.15);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Pill toggle */
+    .theme-pill-toggle {
+        position: relative;
+        width: 52px;
+        height: 28px;
+        border-radius: 999px;
+        cursor: pointer;
+        background: rgba(210, 210, 220, 0.6);
+        border: 1px solid rgba(255,255,255,0.5);
+        box-shadow: inset 0 1px 4px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+        padding: 0 3px;
+        transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    .dark .theme-pill-toggle {
+        background: rgba(49, 46, 129, 0.85);
+        border-color: rgba(129, 140, 248, 0.35);
+        box-shadow: inset 0 1px 4px rgba(0,0,0,0.4), 0 0 14px rgba(99,102,241,0.35);
+    }
+
+    .theme-pill-thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.35s cubic-bezier(.4,0,.2,1), background 0.35s ease, box-shadow 0.35s ease;
+        flex-shrink: 0;
+        transform: translateX(0);
+    }
+
+    .theme-pill-thumb svg {
+        width: 11px;
+        height: 11px;
+        color: #a5b4fc;
+        transition: color 0.35s ease;
+    }
+
+    .dark .theme-pill-thumb {
+        transform: translateX(24px);
+        background: rgba(99, 102, 241, 0.9);
+        box-shadow: 0 2px 8px rgba(99,102,241,0.5);
+    }
+
+    .dark .theme-pill-thumb svg {
+        color: white;
+    }
+
+    /* Notification bell */
+    .notification-btn {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #9ca3af;
+        background: transparent;
+        border: none;
+        transition: color 0.2s, transform 0.2s;
+    }
+
+    .notification-btn:hover {
+        color: #6366f1;
+        transform: scale(1.1);
+    }
+
+    .dark .notification-btn {
+        color: #6b7280;
+    }
+
+    .dark .notification-btn:hover {
+        color: #818cf8;
+    }
+
+    /* Profile pill */
+    .profile-pill-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px 4px 4px;
+        border-radius: 999px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.35);
+        border: 1px solid rgba(255,255,255,0.55);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
+    }
+
+    .profile-pill-btn:hover {
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        transform: scale(1.02);
+    }
+
+    .dark .profile-pill-btn {
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(255,255,255,0.12);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .dark .profile-pill-btn:hover {
+        background: rgba(255,255,255,0.12);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    }
 
     .navbar-glass {
         background: rgba(255, 255, 255, 0.25);
@@ -130,9 +268,6 @@ h3 {
     }
 
     @media (max-width: 768px) {
-        .navbar-glass {
-            height: 70px;
-        }
         #mobile-menu {
             height: auto;
         }
