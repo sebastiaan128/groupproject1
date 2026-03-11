@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
     .bg-beams-canvas {
@@ -14,113 +15,95 @@
         position: relative;
         z-index: 1;
     }
+
+    body > .navbar-wrapper {
+        position: sticky !important;
+        top: 0;
+        z-index: 50;
+    }
 }
 
 @layer components {
-    body {
-    margin: 0;
-    padding: 0;
-}
-.main {
-    display: flex;
-    flex-direction: column;
-    width: 60%;
-    margin: 0 auto;
-}
 
-.container, .container-two {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    border-radius: 20px;
-    padding: 2%;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-}
-.upper {
-    display: flex;
-    flex-direction: row;
-}
-.fields-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding-left: 10px;
-}
+    .main {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        margin: 0 auto;
+    }
 
-.field {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-.fields-col {
-    display: flex;
-    flex-direction: column;
-}
-.fields-row {
-    display: flex;
-    gap: 20px;
-}
-input {
-    border-radius: 10px;
-    padding: 10px;
-    width: 100%;
-}
-.edit-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.edit-btn {
-    align-self: self-end;
-    width: 25%;
-    background-color: #4F39F6;
-    color: white;
-    transition: 0.3s;
-    text-align: center;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-.edit-btn:hover {
-        width: 50%;
-    background-color: #396bf6;
-}
-.save-cancel {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 20px;
-    box-sizing: border-box;
-}
-.btn-save, .btn-cancel {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.btn-save {
-    background-color: #4F39F6;
-    color: white;
-}
-.btn-save:hover {
-    background-color: #396bf6;
-}
-.btn-cancel {
-    background-color: white;
-    border: 1px solid #d1d1d1;
-}
-.btn-cancel:hover {
-    background-color: #f1f1f1;
-}
-h3 {
-    margin: 10px 0;
-}
-    /* Theme toggle — hamburger btn (mobile) */
+    .container, .container-two {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border-radius: 20px;
+        padding: 2%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    .upper { display: flex; flex-direction: row; }
+
+    .fields-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding-left: 10px;
+    }
+
+    .field { display: flex; flex-direction: column; width: 100%; }
+    .fields-col { display: flex; flex-direction: column; }
+    .fields-row { display: flex; gap: 20px; }
+
+    .edit-header { display: flex; justify-content: space-between; align-items: center; }
+
+    .edit-btn {
+        align-self: flex-end;
+        width: 25%;
+        background-color: #4F39F6;
+        color: white;
+        transition: 0.3s;
+        text-align: center;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .edit-btn:hover { width: 50%; background-color: #396bf6; }
+
+    .save-cancel { display: flex; flex-direction: row; width: 100%; gap: 20px; box-sizing: border-box; }
+
+    .btn-save, .btn-cancel {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .btn-save { background-color: #4F39F6; color: white; }
+    .btn-save:hover { background-color: #396bf6; }
+    .btn-cancel { background-color: white; border: 1px solid #d1d1d1; }
+    .btn-cancel:hover { background-color: #f1f1f1; }
+
+    h3 { margin: 10px 0; }
+
+    .profile-input {
+        border-radius: 10px;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        background: transparent;
+        outline: none;
+    }
+
+    .profile-input:disabled {
+        color: inherit;
+        cursor: default;
+        opacity: 1;
+    }
+
     .theme-toggle-btn {
         position: relative;
         width: 2.5rem;
@@ -148,7 +131,6 @@ h3 {
         box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
-    /* Pill toggle */
     .theme-pill-toggle {
         position: relative;
         width: 52px;
@@ -201,35 +183,6 @@ h3 {
         color: white;
     }
 
-    /* Notification bell */
-    .notification-btn {
-        width: 2.25rem;
-        height: 2.25rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: #9ca3af;
-        background: transparent;
-        border: none;
-        transition: color 0.2s, transform 0.2s;
-    }
-
-    .notification-btn:hover {
-        color: #6366f1;
-        transform: scale(1.1);
-    }
-
-    .dark .notification-btn {
-        color: #6b7280;
-    }
-
-    .dark .notification-btn:hover {
-        color: #818cf8;
-    }
-
-    /* Profile pill */
     .profile-pill-btn {
         display: flex;
         align-items: center;
@@ -260,23 +213,17 @@ h3 {
     }
 
     .navbar-glass {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(10px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.45);
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(16px) saturate(180%);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.55);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
     }
 
-    @media (max-width: 768px) {
-        #mobile-menu {
-            height: auto;
-        }
-    }
-
     .dark .navbar-glass {
-        background: rgba(30, 30, 40, 0.5);
+        background: rgba(17, 17, 27, 0.8);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     .avatar-glass {
@@ -289,5 +236,11 @@ h3 {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.15);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        #mobile-menu {
+            height: auto;
+        }
     }
 }

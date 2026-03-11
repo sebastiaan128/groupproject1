@@ -5,23 +5,34 @@
 {% block body %}
 <div class="w-full flex min-h-screen">
 
-    <div class="w-[20%] flex flex-col ml-4 gap-2 p-4 text-center">
-        <h2 class="font-bold text-gray-800 dark:text-gray-100">Filter</h2>
-        <div class="flex flex-col gap-1 text-left">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Search Name</label>
-            <input type="text" id="search-name" placeholder="Name..." class="border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl p-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-        <div class="flex flex-col gap-2 text-left mt-2">
-            <h2 class="self-center text-sm font-medium text-gray-700 dark:text-gray-300">Popular Tags</h2>
-            <div class="flex flex-col items-center gap-1">
-                {% for tag in tags|slice(0, 10) %}
-                    <button data-tag="{{ tag.naam }}" onclick="selectTag({{ tag.naam | json_encode }})" class="w-[80%] bg-white dark:bg-gray-800 rounded-lg text-sm px-2 py-1 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all">{{ tag.naam }}</button>
-                {% endfor %}
+    <div class="w-[22%] shrink-0 flex flex-col gap-4 p-4">
+
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 flex flex-col gap-4 shadow-sm">
+
+            <h2 class="text-sm font-bold text-gray-800 dark:text-gray-100 uppercase tracking-wide">Filter</h2>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Search</label>
+                <input type="text" id="search-name" placeholder="Search by name..." class="border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400 dark:placeholder-gray-500">
             </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Tags</label>
+                <div class="flex flex-wrap gap-1.5">
+                    {% for tag in tags|slice(0, 15) %}
+                        <button data-tag="{{ tag.naam }}" onclick="selectTag({{ tag.naam | json_encode }})"
+                                class="tag-btn text-xs font-medium px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all">
+                            {{ tag.naam }}
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button id="clear-filter" class="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors text-left">
+                ✕ Clear filter
+            </button>
+
         </div>
-        <button id="clear-filter" class="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors">
-            Clear filter
-        </button>
     </div>
 
     <div class="w-[80%] flex flex-col gap-4 p-4">
@@ -30,113 +41,132 @@
             <h3 id="profielen-count" class="text-sm text-gray-600 dark:text-gray-400 font-medium">{{ profielen|default([])|length }} Students Found</h3>
         </div>
 
-        <div id="profielen-container" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {% for profiel in profielen|default([]) %}
-                <div class="profiel-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all p-4 flex flex-col gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-gray-200 dark:bg-gray-700 w-12 h-12 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-lg shrink-0">
-                            {{ profiel.name|first|upper }}
-                        </div>
-                        <div class="text-left min-w-0">
-                            <div class="font-semibold text-gray-900 dark:text-gray-100 truncate">{{ profiel.name }}</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ profiel.email }}</div>
-                        </div>
-                    </div>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 text-left">{{ profiel.bio }}</p>
-                    {% if profiel.tags is not empty %}
-                        <div class="flex flex-wrap gap-1">
-                            {% for tag in profiel.tags %}
-                                <span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg px-2 py-0.5 text-xs">{{ tag.naam }}</span>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endfor %}
+        <div id="profielen-container" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"></div>
+
+        <div id="sentinel" class="flex justify-center py-6 hidden">
+            <div class="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
+
+        <p id="no-results" class="hidden text-center text-gray-400 dark:text-gray-500 py-10">No students found.</p>
 
     </div>
 </div>
 
 <script>
-let selectedTag = null;
+(function () {
+    let page = 1;
+    let loading = false;
+    let hasMore = true;
+    let selectedTag = null;
+    let searchTimeout = null;
 
-function filterProfielen() {
+    const container   = document.getElementById('profielen-container');
+    const sentinel    = document.getElementById('sentinel');
+    const countEl     = document.getElementById('profielen-count');
+    const noResults   = document.getElementById('no-results');
     const searchInput = document.getElementById('search-name');
-    const container = document.getElementById('profielen-container');
-    const countElement = document.getElementById('profielen-count');
-    const profielCards = container.querySelectorAll('.profiel-card');
-    const searchTerm = searchInput.value.toLowerCase();
-    let visibleCount = 0;
 
-    profielCards.forEach(card => {
-        const nameElement = card.querySelector('.font-semibold');
-        const name = nameElement ? nameElement.textContent.toLowerCase() : '';
-        let hasMatch = name.includes(searchTerm);
-
-        if (!hasMatch) {
-            const tagElements = card.querySelectorAll('.flex.flex-wrap span');
-            tagElements.forEach(tagEl => {
-                if (tagEl.textContent.toLowerCase().includes(searchTerm)) {
-                    hasMatch = true;
-                }
-            });
-        }
-
-        if (hasMatch) {
-            card.style.display = 'block';
-            visibleCount++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    countElement.textContent = visibleCount + ' Students Found';
-}
-
-function selectTag(tagNaam) {
-    const searchInput = document.getElementById('search-name');
-    if (selectedTag === tagNaam) {
-        searchInput.value = '';
-        selectedTag = null;
-    } else {
-        searchInput.value = tagNaam;
-        selectedTag = tagNaam;
+    function buildCard(p) {
+        const tagsHtml = p.tags.length
+            ? '<div class="flex flex-wrap gap-1">' +
+              p.tags.map(t => `<span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg px-2 py-0.5 text-xs">${t}</span>`).join('') +
+              '</div>'
+            : '';
+        return `<div class="profiel-card bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-500 transition-all p-4 flex flex-col gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-gray-200 dark:bg-gray-700 w-12 h-12 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-lg shrink-0">${p.name.charAt(0).toUpperCase()}</div>
+                <div class="text-left min-w-0">
+                    <div class="font-semibold text-gray-900 dark:text-gray-100 truncate">${p.name}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 truncate">${p.email}</div>
+                </div>
+            </div>
+            <p class="text-sm text-gray-600 dark:text-gray-400 text-left">${p.bio || ''}</p>
+            ${tagsHtml}
+        </div>`;
     }
-    document.querySelectorAll('button[data-tag]').forEach(btn => {
-        if (btn.getAttribute('data-tag') === selectedTag) {
-            btn.classList.add('bg-indigo-500', 'text-white', 'border-indigo-500');
-            btn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-gray-100', 'border-gray-200', 'dark:border-gray-700');
+
+    function loadMore() {
+        if (loading || !hasMore) return;
+        loading = true;
+        sentinel.classList.remove('hidden');
+
+        const params = new URLSearchParams({ page, search: searchInput.value.trim() });
+        if (selectedTag) params.set('tag', selectedTag);
+
+        fetch('/network/load?' + params)
+            .then(r => r.json())
+            .then(data => {
+                data.profielen.forEach(p => container.insertAdjacentHTML('beforeend', buildCard(p)));
+                countEl.textContent = data.total + ' Students Found';
+                hasMore = data.hasMore;
+                noResults.classList.toggle('hidden', data.total > 0);
+                page++;
+            })
+            .finally(() => {
+                loading = false;
+                sentinel.classList.add('hidden');
+            });
+    }
+
+    function reset() {
+        page = 1;
+        hasMore = true;
+        container.innerHTML = '';
+        loadMore();
+    }
+
+    // IntersectionObserver for infinite scroll
+    const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) loadMore();
+    }, { rootMargin: '200px' });
+    observer.observe(sentinel);
+
+    // Search
+    searchInput.addEventListener('input', function () {
+        selectedTag = null;
+        document.querySelectorAll('button[data-tag]').forEach(btn => {
+            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+            btn.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+        });
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(reset, 300);
+    });
+
+    // Tag filter
+    window.selectTag = function (tagNaam) {
+        if (selectedTag === tagNaam) {
+            selectedTag = null;
+            searchInput.value = '';
         } else {
-            btn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-gray-100', 'border-gray-200', 'dark:border-gray-700');
-            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+            selectedTag = tagNaam;
+            searchInput.value = '';
         }
-    });
-    filterProfielen();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search-name');
-    const clearButton = document.getElementById('clear-filter');
-
-    searchInput.addEventListener('input', function() {
-        selectedTag = null;
         document.querySelectorAll('button[data-tag]').forEach(btn => {
-            btn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-gray-100', 'border-gray-200', 'dark:border-gray-700');
-            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+            const active = btn.getAttribute('data-tag') === selectedTag;
+            btn.classList.toggle('bg-indigo-500', active);
+            btn.classList.toggle('text-white', active);
+            btn.classList.toggle('border-indigo-500', active);
+            btn.classList.toggle('bg-gray-100', !active);
+            btn.classList.toggle('text-gray-600', !active);
+            btn.classList.toggle('border-gray-200', !active);
         });
-        filterProfielen();
-    });
+        reset();
+    };
 
-    clearButton.addEventListener('click', function() {
+    // Clear
+    document.getElementById('clear-filter').addEventListener('click', function () {
+        selectedTag = null;
         searchInput.value = '';
-        selectedTag = null;
         document.querySelectorAll('button[data-tag]').forEach(btn => {
-            btn.classList.add('bg-indigo-100', 'dark:bg-indigo-900/40');
-            btn.classList.remove('bg-indigo-300', 'dark:bg-indigo-700');
+            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
+            btn.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
         });
-        filterProfielen();
+        reset();
     });
-});
+
+    // Initial load
+    loadMore();
+})();
 </script>
 
 {% endblock %}
