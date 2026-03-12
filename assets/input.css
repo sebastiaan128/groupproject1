@@ -11,12 +11,12 @@
         z-index: 0;
     }
 
-    body > *:not(canvas) {
+    body>*:not(canvas) {
         position: relative;
         z-index: 1;
     }
 
-    body > .navbar-wrapper {
+    body>.navbar-wrapper {
         position: sticky !important;
         top: 0;
         z-index: 50;
@@ -32,7 +32,8 @@
         margin: 0 auto;
     }
 
-    .container, .container-two {
+    .container,
+    .container-two {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -42,7 +43,11 @@
         box-sizing: border-box;
     }
 
-    .upper { display: flex; flex-direction: row; }
+    .upper {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+    }
 
     .fields-wrapper {
         display: flex;
@@ -51,11 +56,27 @@
         padding-left: 10px;
     }
 
-    .field { display: flex; flex-direction: column; width: 100%; }
-    .fields-col { display: flex; flex-direction: column; }
-    .fields-row { display: flex; gap: 20px; }
+    .field {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
 
-    .edit-header { display: flex; justify-content: space-between; align-items: center; }
+    .fields-col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fields-row {
+        display: flex;
+        gap: 20px;
+    }
+
+    .edit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     .edit-btn {
         align-self: flex-end;
@@ -68,11 +89,22 @@
         border-radius: 10px;
         cursor: pointer;
     }
-    .edit-btn:hover { width: 50%; background-color: #396bf6; }
 
-    .save-cancel { display: flex; flex-direction: row; width: 100%; gap: 20px; box-sizing: border-box; }
+    .edit-btn:hover {
+        width: 25%;
+        background-color: #396bf6;
+    }
 
-    .btn-save, .btn-cancel {
+    .save-cancel {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 20px;
+        box-sizing: border-box;
+    }
+
+    .btn-save,
+    .btn-cancel {
         flex: 1;
         display: flex;
         justify-content: center;
@@ -82,12 +114,28 @@
         cursor: pointer;
         transition: 0.3s;
     }
-    .btn-save { background-color: #4F39F6; color: white; }
-    .btn-save:hover { background-color: #396bf6; }
-    .btn-cancel { background-color: white; border: 1px solid #d1d1d1; }
-    .btn-cancel:hover { background-color: #f1f1f1; }
 
-    h3 { margin: 10px 0; }
+    .btn-save {
+        background-color: #4F39F6;
+        color: white;
+    }
+
+    .btn-save:hover {
+        background-color: #396bf6;
+    }
+
+    .btn-cancel {
+        background-color: white;
+        border: 1px solid #d1d1d1;
+    }
+
+    .btn-cancel:hover {
+        background-color: #f1f1f1;
+    }
+
+    h3 {
+        margin: 10px 0;
+    }
 
     .profile-input {
         border-radius: 10px;
@@ -111,8 +159,8 @@
         border-radius: 50%;
         cursor: pointer;
         background: rgba(255, 255, 255, 0.4);
-        border: 1px solid rgba(255,255,255,0.6);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -122,13 +170,13 @@
 
     .theme-toggle-btn:hover {
         transform: scale(1.1);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
 
     .dark .theme-toggle-btn {
-        background: rgba(255,255,255,0.1);
-        border-color: rgba(255,255,255,0.15);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .theme-pill-toggle {
@@ -138,8 +186,8 @@
         border-radius: 999px;
         cursor: pointer;
         background: rgba(210, 210, 220, 0.6);
-        border: 1px solid rgba(255,255,255,0.5);
-        box-shadow: inset 0 1px 4px rgba(0,0,0,0.12);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.12);
         display: flex;
         align-items: center;
         padding: 0 3px;
@@ -149,7 +197,7 @@
     .dark .theme-pill-toggle {
         background: rgba(49, 46, 129, 0.85);
         border-color: rgba(129, 140, 248, 0.35);
-        box-shadow: inset 0 1px 4px rgba(0,0,0,0.4), 0 0 14px rgba(99,102,241,0.35);
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 14px rgba(99, 102, 241, 0.35);
     }
 
     .theme-pill-thumb {
@@ -157,11 +205,11 @@
         height: 22px;
         border-radius: 50%;
         background: white;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: transform 0.35s cubic-bezier(.4,0,.2,1), background 0.35s ease, box-shadow 0.35s ease;
+        transition: transform 0.35s cubic-bezier(.4, 0, .2, 1), background 0.35s ease, box-shadow 0.35s ease;
         flex-shrink: 0;
         transform: translateX(0);
     }
@@ -176,7 +224,7 @@
     .dark .theme-pill-thumb {
         transform: translateX(24px);
         background: rgba(99, 102, 241, 0.9);
-        box-shadow: 0 2px 8px rgba(99,102,241,0.5);
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.5);
     }
 
     .dark .theme-pill-thumb svg {
@@ -191,25 +239,25 @@
         border-radius: 999px;
         cursor: pointer;
         background: rgba(255, 255, 255, 0.35);
-        border: 1px solid rgba(255,255,255,0.55);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         transition: box-shadow 0.2s, transform 0.2s, background 0.2s;
     }
 
     .profile-pill-btn:hover {
-        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
         transform: scale(1.02);
     }
 
     .dark .profile-pill-btn {
-        background: rgba(255,255,255,0.08);
-        border-color: rgba(255,255,255,0.12);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     }
 
     .dark .profile-pill-btn:hover {
-        background: rgba(255,255,255,0.12);
-        box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     }
 
     .navbar-glass {
@@ -243,4 +291,58 @@
             height: auto;
         }
     }
+}
+
+.tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #d1d1d1;
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.tags-wrapper label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: 0.2s;
+}
+
+.tags-wrapper label:hover {
+    background-color: #e0e7ff;
+    border-color: #4F39F6;
+}
+
+.tags-wrapper input[type="checkbox"] {
+    accent-color: #4F39F6;
+    width: 15px;
+    height: 15px;
+}
+
+.tags-wrapper input[type="checkbox"]:checked + span,
+.tags-wrapper label:has(input:checked) {
+    background-color: #ede9fe;
+    border-color: #4F39F6;
+    color: #4F39F6;
+    font-weight: 500;
+}
+
+.dark .tags-wrapper label {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #d1d5db;
+}
+
+.dark .tags-wrapper label:hover {
+    background-color: #3730a3;
+    border-color: #6366f1;
 }
