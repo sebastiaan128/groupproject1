@@ -39,6 +39,7 @@
         </div>
 
         <div class="flex items-center gap-2 shrink-0">
+
             <button id="theme-toggle" aria-label="Toggle dark mode" class="theme-pill-toggle">
                 <span class="theme-pill-thumb">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -48,7 +49,7 @@
             </button>
 
             <div class="relative hidden sm:block">
-                <button id="profile-btn" class="profile-pill-btn mr-3.75" aria-expanded="false">
+                <button id="profile-btn" class="profile-pill-btn " aria-expanded="false">
                     <span class="w-8 h-8 rounded-full overflow-hidden shrink-0">
                         <img id="desktop-avatar" src="/assets/logo/profile.png" alt="User Avatar" class="w-full h-full object-cover">
                     </span>
@@ -72,6 +73,15 @@
                 </div>
             </div>
 
+            <div class="relative md:mr-3.75" style="width:2.5rem;height:2.5rem;">
+                <button id="notif-btn" aria-label="Notificaties" class="theme-toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </button>
+                <span id="notif-badge" class="invisible absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full ring-[3px] ring-white dark:ring-[#11111b] pointer-events-none"></span>
+            </div>
+
             <button id="nav-hamburger" class="sm:hidden theme-toggle-btn" aria-label="Open menu" aria-expanded="false">
                 <svg id="ham-open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
@@ -83,6 +93,16 @@
         </div>
 
     </nav>
+
+    <div id="notif-dropdown" class="hidden absolute left-4 right-4 top-full mt-2 sm:-mt-2 sm:left-auto sm:w-80 navbar-glass rounded-2xl z-50 overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-white/10">
+            <span class="text-sm font-semibold text-gray-800 dark:text-white">Notifications</span>
+            <button id="notif-alles-lees" class="text-xs text-indigo-500 hover:underline">Mark all as read</button>
+        </div>
+        <ul id="notif-list" class="max-h-72 overflow-y-auto divide-y divide-gray-100 dark:divide-white/10">
+            <li id="notif-empty" class="px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-500">No new notifications</li>
+        </ul>
+    </div>
 
     <div id="mobile-menu" class="sm:hidden hidden absolute top-full left-4 right-4 sm:left-6 sm:right-6 mt-2 navbar-glass rounded-2xl px-4 py-3 flex flex-col gap-1 text-sm font-medium text-gray-700 dark:text-gray-200">
         <a href="{{ path('home') }}" class="px-4 py-2 rounded-xl transition-all {% if route == 'home' %}text-indigo-600 dark:text-indigo-400 font-semibold{% else %}hover:text-indigo-600 dark:hover:text-indigo-400{% endif %}">Home</a>
@@ -106,10 +126,18 @@
 
 <script>
     (function () {
-        var btn    = document.getElementById('nav-hamburger');
-        var menu   = document.getElementById('mobile-menu');
-        var open   = document.getElementById('ham-open');
-        var close  = document.getElementById('ham-close');
+        var btn           = document.getElementById('nav-hamburger');
+        var menu          = document.getElementById('mobile-menu');
+        var open          = document.getElementById('ham-open');
+        var close         = document.getElementById('ham-close');
+        var notifBtn      = document.getElementById('notif-btn');
+        var notifDropdown = document.getElementById('notif-dropdown');
+        var notifBadge    = document.getElementById('notif-badge');
+        var notifList     = document.getElementById('notif-list');
+        var notifEmpty    = document.getElementById('notif-empty');
+        var profileBtn      = document.getElementById('profile-btn');
+        var profileDropdown = document.getElementById('profile-dropdown');
+        var profileChevron  = document.getElementById('profile-chevron');
 
         var desktopAvatar = document.getElementById('desktop-avatar');
         var mobileAvatar  = document.getElementById('mobile-avatar');
@@ -120,6 +148,7 @@
 
         if (btn) {
             btn.addEventListener('click', function () {
+                if (notifDropdown) notifDropdown.classList.add('hidden');
                 var expanded = btn.getAttribute('aria-expanded') === 'true';
                 btn.setAttribute('aria-expanded', String(!expanded));
                 menu.classList.toggle('hidden');
@@ -128,13 +157,71 @@
             });
         }
 
-        var profileBtn      = document.getElementById('profile-btn');
-        var profileDropdown = document.getElementById('profile-dropdown');
-        var profileChevron  = document.getElementById('profile-chevron');
+        function loadNotificaties() {
+            fetch('/notificaties/count')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.count > 0) {
+                        notifBadge.classList.remove('invisible');
+                        notifEmpty.classList.add('hidden');
+                        notifList.querySelectorAll('.notif-item').forEach(function(el) { el.remove(); });
+                        data.items.forEach(function(item) {
+                            var li = document.createElement('li');
+                            li.className = 'notif-item px-4 py-3 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer';
+                            li.innerHTML = '<a href="/anwser-question/' + item.vraagId + '" class="flex flex-col gap-0.5" data-id="' + item.id + '">' +
+                                '<span class="text-sm text-gray-800 dark:text-gray-100">' + item.bericht + '</span>' +
+                                '<span class="text-xs text-gray-400 dark:text-gray-500">' + item.tijd + '</span>' +
+                                '</a>';
+                            li.querySelector('a').addEventListener('click', function() {
+                                fetch('/notificaties/lees/' + item.id, { method: 'POST' });
+                            });
+                            notifList.appendChild(li);
+                        });
+                    } else {
+                        notifBadge.classList.add('invisible');
+                        notifList.querySelectorAll('.notif-item').forEach(function(el) { el.remove(); });
+                        notifEmpty.classList.remove('hidden');
+                    }
+                });
+        }
+
+        if (notifBtn) {
+            notifBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (profileDropdown) profileDropdown.classList.add('hidden');
+                if (profileBtn) profileBtn.setAttribute('aria-expanded', 'false');
+                if (profileChevron) profileChevron.style.transform = '';
+                if (btn) btn.setAttribute('aria-expanded', 'false');
+                if (menu) menu.classList.add('hidden');
+                if (open) open.classList.remove('hidden');
+                if (close) close.classList.add('hidden');
+                notifDropdown.classList.toggle('hidden');
+                if (!notifDropdown.classList.contains('hidden')) {
+                    if (window.innerWidth >= 640) {
+                        var btnRect     = notifBtn.getBoundingClientRect();
+                        var parentRect  = notifDropdown.offsetParent.getBoundingClientRect();
+                        notifDropdown.style.right = (parentRect.right - btnRect.right) + 'px';
+                    } else {
+                        notifDropdown.style.right = '';
+                    }
+                    loadNotificaties();
+                }
+            });
+
+            document.getElementById('notif-alles-lees').addEventListener('click', function() {
+                fetch('/notificaties/lees-alles', { method: 'POST' }).then(function() {
+                    loadNotificaties();
+                    notifDropdown.classList.add('hidden');
+                });
+            });
+
+            loadNotificaties();
+        }
 
         if (profileBtn && profileDropdown) {
             profileBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
+                if (notifDropdown) notifDropdown.classList.add('hidden');
                 var isOpen = !profileDropdown.classList.contains('hidden');
                 profileDropdown.classList.toggle('hidden');
                 profileBtn.setAttribute('aria-expanded', String(!isOpen));
@@ -143,13 +230,25 @@
         }
 
         document.addEventListener('click', function (e) {
+            var clickedInsideNotif = (notifBtn && notifBtn.contains(e.target)) || (notifDropdown && notifDropdown.contains(e.target));
+            var clickedHamburger   = (btn && btn.contains(e.target)) || (menu && menu.contains(e.target));
+            var clickedInsideProfile = (profileBtn && profileBtn.contains(e.target)) || (profileDropdown && profileDropdown.contains(e.target));
+
+            if (!clickedInsideNotif && !clickedHamburger) {
+                notifDropdown.classList.add('hidden');
+            }
+            if (!clickedInsideProfile && clickedInsideNotif) {
+                if (profileDropdown) profileDropdown.classList.add('hidden');
+                if (profileBtn) profileBtn.setAttribute('aria-expanded', 'false');
+                if (profileChevron) profileChevron.style.transform = '';
+            }
             if (btn && !btn.contains(e.target) && menu && !menu.contains(e.target)) {
                 btn.setAttribute('aria-expanded', 'false');
                 if (menu) menu.classList.add('hidden');
                 if (open) open.classList.remove('hidden');
                 if (close) close.classList.add('hidden');
             }
-            if (profileBtn && !profileBtn.contains(e.target)) {
+            if (!clickedInsideProfile && !clickedInsideNotif) {
                 if (profileDropdown) profileDropdown.classList.add('hidden');
                 if (profileBtn) profileBtn.setAttribute('aria-expanded', 'false');
                 if (profileChevron) profileChevron.style.transform = '';
