@@ -32,25 +32,33 @@ class NetworkController extends AbstractController
         $search = trim($request->query->get('search', ''));
         $tag    = trim($request->query->get('tag', ''));
 
-        $qb = $em->getRepository(Profiel::class)
+        $idQb = $em->getRepository(Profiel::class)
             ->createQueryBuilder('p')
+            ->select('p.id')
             ->leftJoin('p.tags', 't')
-            ->addSelect('t')
             ->orderBy('p.name', 'ASC')
             ->setFirstResult(($page - 1) * self::PER_PAGE)
             ->setMaxResults(self::PER_PAGE);
 
         if ($search !== '') {
-            $qb->andWhere('LOWER(p.name) LIKE :search')->setParameter('search', '%' . strtolower($search) . '%');
+            $idQb->andWhere('LOWER(p.name) LIKE :search')->setParameter('search', '%' . strtolower($search) . '%');
         }
-
         if ($tag !== '') {
-            $qb->andWhere('t.naam = :tag')->setParameter('tag', $tag);
+            $idQb->andWhere('t.naam = :tag')->setParameter('tag', $tag);
         }
 
-        $profielen = $qb->getQuery()->getResult();
+        $ids = array_column($idQb->getQuery()->getScalarResult(), 'id');
 
-        // Total count for hasMore
+        $profielen = empty($ids) ? [] : $em->getRepository(Profiel::class)
+            ->createQueryBuilder('p')
+            ->leftJoin('p.tags', 't')
+            ->addSelect('t')
+            ->where('p.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
         $countQb = $em->getRepository(Profiel::class)
             ->createQueryBuilder('p')
             ->select('COUNT(DISTINCT p.id)')
