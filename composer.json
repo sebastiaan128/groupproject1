@@ -7,14 +7,14 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/doctrine-bundle": "*",
-        "doctrine/doctrine-migrations-bundle": "*",
-        "doctrine/orm": "*",
+        "doctrine/doctrine-bundle": ">=3.2.2",
+        "doctrine/doctrine-migrations-bundle": ">=4",
+        "doctrine/orm": ">=3.6.2",
         "kreait/firebase-php": "^8.2",
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
-        "symfony/flex": "^2",
+        "symfony/flex": "^2.10",
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
         "symfony/runtime": "7.4.*",
@@ -76,9 +76,9 @@
         }
     },
     "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^4.3",
-        "fakerphp/faker": "^1.24",
+        "doctrine/doctrine-fixtures-bundle": "^4.3.1",
+        "fakerphp/faker": "^1.24.1",
         "symfony/maker-bundle": "^1.66",
-        "zenstruck/foundry": "^2.9"
+        "zenstruck/foundry": "^2.9.2"
     }
 }
