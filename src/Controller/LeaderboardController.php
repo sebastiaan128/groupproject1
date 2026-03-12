@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\AntwoordenRepository;
 use App\Repository\ProfielRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,22 +12,45 @@ use Symfony\Component\Routing\Annotation\Route;
 class LeaderboardController extends AbstractController
 {
     #[Route('/leaderboard', name: 'leaderboard')]
-    public function index(Request $request, ProfielRepository $profielRepository): Response
+    public function index(Request $request, ProfielRepository $profielRepository, AntwoordenRepository $antwoordenRepository): Response
     {
-        $profielen = $profielRepository->createQueryBuilder('p')
-            ->leftJoin('p.vragen', 'v')
-            ->leftJoin('p.antwoorden', 'a')
-            ->addSelect('COUNT(DISTINCT v.id) AS HIDDEN vragenCount')
-            ->addSelect('COUNT(DISTINCT a.id) AS HIDDEN antwoordenCount')
-            ->groupBy('p.id')
-            ->orderBy('COUNT(DISTINCT v.id) + COUNT(DISTINCT a.id)', 'DESC')
+        $antwoorden = $antwoordenRepository->createQueryBuilder('a')
+            ->select('a', 'p', 'v')
+            ->join('a.profiel', 'p')
+            ->join('a.vraag', 'v')
             ->getQuery()
             ->getResult();
+
+        $vraagBest = [];
+        foreach ($antwoorden as $antwoord) {
+            $vraagId = $antwoord->getVraag()->getId();
+            $net = ($antwoord->getUpvotes() ?? 0) - ($antwoord->getDownvotes() ?? 0);
+
+            if (!isset($vraagBest[$vraagId]) || $net > $vraagBest[$vraagId]['max']) {
+                $vraagBest[$vraagId] = ['max' => $net, 'profielIds' => [$antwoord->getProfiel()->getId()]];
+            } elseif ($net === $vraagBest[$vraagId]['max']) {
+                $vraagBest[$vraagId]['profielIds'][] = $antwoord->getProfiel()->getId();
+            }
+        }
+
+        $punten = [];
+        foreach ($vraagBest as $data) {
+            if ($data['max'] > 0) {
+                foreach ($data['profielIds'] as $profielId) {
+                    $punten[$profielId] = ($punten[$profielId] ?? 0) + 1;
+                }
+            }
+        }
+        $profielen = $profielRepository->findAll();
+        usort($profielen, function ($a, $b) use ($punten) {
+            return ($punten[$b->getId()] ?? 0) <=> ($punten[$a->getId()] ?? 0);
+        });
 
         $currentProfielId = $request->getSession()->get('profiel_id');
 
         return $this->render('leaderboard.html.twig', [
-            'profielen'        => $profielen,
+            'profielen'          => $profielen,
+            'punten'             => $punten,
             'current_profiel_id' => $currentProfielId,
         ]);
     }

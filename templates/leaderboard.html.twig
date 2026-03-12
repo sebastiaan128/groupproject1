@@ -6,7 +6,7 @@
 
     <div class="mb-8">
         <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">Leaderboard</h1>
-        <p class="mt-2 text-gray-500 dark:text-gray-400 text-base">Top contributors ranked by questions and answers.</p>
+        <p class="mt-2 text-gray-500 dark:text-gray-400 text-base">Ranked by best answers — 1 punt per vraag waarvoor jij het meeste upvotes hebt.</p>
     </div>
 
     {% if profielen|length > 0 %}
@@ -17,14 +17,14 @@
         {# 2nd place #}
         {% if profielen[1] is defined %}
             {% set p2 = profielen[1] %}
-            {% set s2 = p2.vragen|length + p2.antwoorden|length %}
+            {% set s2 = punten[p2.id] ?? 0 %}
             <div class="flex flex-col items-center gap-3 w-[30%]">
                 <span class="text-3xl">🥈</span>
                 <div class="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-2xl font-bold text-gray-600 dark:text-gray-300 ring-4 ring-gray-300 dark:ring-gray-600">
                     {{ p2.name|split(' ')|first|first|upper }}
                 </div>
                 <p class="text-base font-semibold text-gray-800 dark:text-gray-200 text-center truncate w-full">{{ p2.name|split(' ')|first }}</p>
-                <span class="text-sm font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ s2 }} pts</span>
+                <span class="text-sm font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ s2 }} {{ s2 == 1 ? 'punt' : 'punten' }}</span>
                 <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-t-2xl h-28 flex items-center justify-center">
                     <span class="text-4xl font-black text-gray-400 dark:text-gray-500">2</span>
                 </div>
@@ -33,14 +33,14 @@
 
         {# 1st place — tallest #}
         {% set p1 = profielen[0] %}
-        {% set s1 = p1.vragen|length + p1.antwoorden|length %}
+        {% set s1 = punten[p1.id] ?? 0 %}
         <div class="flex flex-col items-center gap-3 w-[36%]">
             <span class="text-4xl">👑</span>
             <div class="w-24 h-24 rounded-full bg-yellow-100 dark:bg-yellow-500/20 flex items-center justify-center text-3xl font-bold text-yellow-600 dark:text-yellow-400 ring-4 ring-yellow-400 dark:ring-yellow-500">
                 {{ p1.name|split(' ')|first|first|upper }}
             </div>
             <p class="text-lg font-bold text-gray-900 dark:text-white text-center truncate w-full">{{ p1.name|split(' ')|first }}</p>
-            <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/20 px-3 py-1 rounded-full">{{ s1 }} pts</span>
+            <span class="text-sm font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-500/20 px-3 py-1 rounded-full">{{ s1 }} {{ s1 == 1 ? 'punt' : 'punten' }}</span>
             <div class="w-full bg-gradient-to-b from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 rounded-t-2xl h-44 flex items-center justify-center shadow-xl">
                 <span class="text-5xl font-black text-white">1</span>
             </div>
@@ -49,14 +49,14 @@
         {# 3rd place #}
         {% if profielen[2] is defined %}
             {% set p3 = profielen[2] %}
-            {% set s3 = p3.vragen|length + p3.antwoorden|length %}
+            {% set s3 = punten[p3.id] ?? 0 %}
             <div class="flex flex-col items-center gap-3 w-[30%]">
                 <span class="text-3xl">🥉</span>
                 <div class="w-16 h-16 rounded-full bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center text-xl font-bold text-orange-600 dark:text-orange-400 ring-4 ring-orange-300 dark:ring-orange-600">
                     {{ p3.name|split(' ')|first|first|upper }}
                 </div>
                 <p class="text-base font-semibold text-gray-800 dark:text-gray-200 text-center truncate w-full">{{ p3.name|split(' ')|first }}</p>
-                <span class="text-sm font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ s3 }} pts</span>
+                <span class="text-sm font-bold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{{ s3 }} {{ s3 == 1 ? 'punt' : 'punten' }}</span>
                 <div class="w-full bg-orange-200 dark:bg-orange-900/40 rounded-t-2xl h-20 flex items-center justify-center">
                     <span class="text-4xl font-black text-orange-400 dark:text-orange-500">3</span>
                 </div>
@@ -73,7 +73,7 @@
                 {% set isMe = profiel.id == current_profiel_id %}
                 {% set vragenCount = profiel.vragen|length %}
                 {% set antwoordenCount = profiel.antwoorden|length %}
-                {% set score = vragenCount + antwoordenCount %}
+                {% set score = punten[profiel.id] ?? 0 %}
 
                 <div class="flex items-center gap-4 bg-white dark:bg-gray-800 border {% if isMe %}border-indigo-400 dark:border-indigo-500{% else %}border-gray-200 dark:border-gray-700{% endif %} rounded-2xl px-5 py-4 shadow-sm">
 
