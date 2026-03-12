@@ -35,12 +35,12 @@
                 </li>
             </ul>
         </div>
-        <div class="border-2 rounded-xl border-gray-200 shadow p-6 mt-7">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm p-6 mt-7">
             <form action="/submit-question" method="POST">
             <div class="flex flex-col">
                 <span>Title</span>
                 <textarea
-                    name="message"
+                    name="titel"
                     class="border rounded-lg border-gray-300 resize-none mt-1"
                     rows="2"
                 ></textarea>
@@ -48,7 +48,7 @@
             <div class="flex flex-col mt-4">
                 <span>Description</span>
                 <textarea
-                    name="message"
+                    name="beschrijving"
                     class="border rounded-lg border-gray-300 resize-none mt-1"
                     rows="7"
                 ></textarea></div>
@@ -62,14 +62,13 @@
                         <span class="bg-green-100 text-green-700 rounded-lg p-1 px-2">Tag 3</span>
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="flex mt-6 mb-5">
-            <button class="w-1/2 bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl me-4">Cancel</button>
-            <button type="submit" class="w-1/2 px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold">Send</button>
+            <div class="flex mt-6 mb-2">
+                <button type="button" class="w-1/2 bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl me-4">Cancel</button>
+                <button type="submit" class="w-1/2 px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold">Send</button>
+            </div>
+        </form>
         </div>
     </div>
-
     <div class="flex-1"></div>
 </div>
 {% endblock %}

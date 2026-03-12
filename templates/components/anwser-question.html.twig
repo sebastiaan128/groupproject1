@@ -19,37 +19,22 @@
             <div
                 class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200 mt-5">
                 <div class="flex sm:flex-col gap-2 sm:gap-3 sm:w-16 shrink-0">
-                    <div
-                        class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold">
-                        <span class="text-xs font-normal opacity-70">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                 height="24" fill="currentColor"
-                                 class="bi bi-caret-up-fill"
-                                 viewBox="0 0 16 16">
-  <path
-      d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-</svg>
-                        </span>
-                    </div>
-                    <div
-                        class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
+                    <button onclick="vote('vraag', {{ vraag.id }}, 'up', this)"
+                        class="vote-btn {{ vraagStem == 'up' ? 'bg-green-400 text-white border-green-500' : 'bg-green-100 text-green-700 border-green-300' }} dark:border-green-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                        </svg>
+                    </button>
+                    <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
                         <span>Votes</span>
-                        <span>{{ vraag.upvotes - vraag.downvotes }}</span>
+                        <span id="vraag-score">{{ vraag.upvotes - vraag.downvotes }}</span>
                     </div>
-                    <div
-                        class="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
-                        <span></span>
-                        <span class="text-xs font-normal opacity-70">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                 height="24" fill="currentColor"
-                                 class="bi bi-caret-down-fill"
-                                 viewBox="0 0 16 16">
-  <path
-      d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-</svg>
-                        </span>
-                    </div>
-
+                    <button onclick="vote('vraag', {{ vraag.id }}, 'down', this)"
+                        class="vote-btn {{ vraagStem == 'down' ? 'bg-red-400 text-white border-red-500' : 'bg-red-100 text-red-700 border-red-300' }} dark:border-red-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border w-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </button>
                 </div>
 
                 <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
@@ -78,37 +63,22 @@
                 <div
                     class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200 mt-5">
                     <div class="flex sm:flex-col gap-2 sm:gap-3 sm:w-16 shrink-0">
-                        <div
-                            class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
-                        <span class="text-xs font-normal opacity-70">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                 height="24" fill="currentColor"
-                                 class="bi bi-caret-up-fill"
-                                 viewBox="0 0 16 16">
-  <path
-      d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-</svg>
-                        </span>
-                        </div>
-                        <div
-                            class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
+                        <button onclick="vote('antwoord', {{ antwoord.id }}, 'up', this)"
+                            class="vote-btn {{ antwoordStemmen[antwoord.id] == 'up' ? 'bg-green-400 text-white border-green-500' : 'bg-green-100 text-green-700 border-green-300' }} rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                            </svg>
+                        </button>
+                        <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
                             <span>Votes</span>
-                            <span>{{ antwoord.upvotes - antwoord.downvotes }}</span>
+                            <span class="antwoord-score" data-id="{{ antwoord.id }}">{{ antwoord.upvotes - antwoord.downvotes }}</span>
                         </div>
-                        <div
-                            class="bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
-                            <span></span>
-                            <span class="text-xs font-normal opacity-70">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                 height="24" fill="currentColor"
-                                 class="bi bi-caret-down-fill"
-                                 viewBox="0 0 16 16">
-  <path
-      d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-</svg>
-                        </span>
-                        </div>
-
+                        <button onclick="vote('antwoord', {{ antwoord.id }}, 'down', this)"
+                            class="vote-btn {{ antwoordStemmen[antwoord.id] == 'down' ? 'bg-red-400 text-white border-red-500' : 'bg-red-100 text-red-700 border-red-300' }} rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                            </svg>
+                        </button>
                     </div>
 
                     <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
@@ -122,8 +92,83 @@
                         </div>
                     </div>
                 </div>            {% endfor %}
+
+            {% if not is_guest %}
+            <div
+                class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200 mt-5">
+                <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
+                    <span class="text-2xl font-semibold">Your Anwser</span>
+                    <div class="flex justify-between pt-2 w-full py-3">
+                        <form action="/submit-anwser" method="POST" class="w-full">
+                        <input type="hidden" name="vraag_id" value="{{ vraag.id }}">
+                        <textarea
+                            name="antwoord"
+                            placeholder="Write your answer here..."
+                            class="border rounded-lg border-gray-300 resize-none mt-1 w-full"
+                            style="padding: 16px;"
+                            rows="7"
+                        ></textarea>
+                        <button type="submit" class="mt-3 px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold">Post Answer</button>
+                    </form>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mt-5 text-center text-gray-500 dark:text-gray-400">
+                Je moet ingelogd zijn om een antwoord te plaatsen.
+            </div>
+            {% endif %}
         </div>
 
         <div class="flex-1"></div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function vote(type, id, richting, btn) {
+    fetch(`/vote/${type}/${id}/${richting}`, { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) return;
+
+            const score = data.upvotes - data.downvotes;
+            const container = btn.closest('.flex.sm\\:flex-col');
+            const upBtn   = container.querySelector('button:first-child');
+            const downBtn = container.querySelector('button:last-child');
+
+            if (type === 'vraag') {
+                document.getElementById('vraag-score').textContent = score;
+            } else {
+                const scoreEl = document.querySelector(`.antwoord-score[data-id="${id}"]`);
+                if (scoreEl) scoreEl.textContent = score;
+            }
+
+            resetVoteBtn(upBtn,   'green');
+            resetVoteBtn(downBtn, 'red');
+            if (data.userVote === 'up')   activateVoteBtn(upBtn,   'green');
+            if (data.userVote === 'down') activateVoteBtn(downBtn, 'red');
+        });
+}
+
+function resetVoteBtn(btn, color) {
+    if (color === 'green') {
+        btn.classList.remove('bg-green-400', 'text-white', 'border-green-500');
+        btn.classList.add('bg-green-100', 'text-green-700', 'border-green-300');
+    } else {
+        btn.classList.remove('bg-red-400', 'text-white', 'border-red-500');
+        btn.classList.add('bg-red-100', 'text-red-700', 'border-red-300');
+    }
+}
+
+function activateVoteBtn(btn, color) {
+    if (color === 'green') {
+        btn.classList.remove('bg-green-100', 'text-green-700', 'border-green-300');
+        btn.classList.add('bg-green-400', 'text-white', 'border-green-500');
+    } else {
+        btn.classList.remove('bg-red-100', 'text-red-700', 'border-red-300');
+        btn.classList.add('bg-red-400', 'text-white', 'border-red-500');
+    }
+}
+</script>
 {% endblock %}
