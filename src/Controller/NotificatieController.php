@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NotificatieController extends AbstractController
 {
-    #[Route('/notificaties/count', name: 'notificaties_count', methods: ['GET'])]
+    #[Route('/notifications/count', name: 'notifications_count', methods: ['GET'])]
     public function count(Request $request, NotificatieRepository $repo): JsonResponse
     {
         $profielId = $request->getSession()->get('profiel_id');
@@ -40,7 +40,7 @@ class NotificatieController extends AbstractController
         return new JsonResponse(['count' => count($notificaties), 'items' => $items]);
     }
 
-    #[Route('/notificaties/lees/{id}', name: 'notificatie_lees', methods: ['POST'])]
+    #[Route('/notifications/read/{id}', name: 'notification_read', methods: ['POST'])]
     public function markRead(int $id, Request $request, NotificatieRepository $repo, EntityManagerInterface $em): JsonResponse
     {
         $profielId = $request->getSession()->get('profiel_id');
@@ -54,7 +54,7 @@ class NotificatieController extends AbstractController
         return new JsonResponse(['ok' => true]);
     }
 
-    #[Route('/notificaties/lees-alles', name: 'notificaties_lees_alles', methods: ['POST'])]
+    #[Route('/notifications/read-all', name: 'notifications_read_all', methods: ['POST'])]
     public function markAllRead(Request $request, NotificatieRepository $repo, EntityManagerInterface $em): JsonResponse
     {
         $profielId = $request->getSession()->get('profiel_id');

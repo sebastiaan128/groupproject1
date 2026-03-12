@@ -3,23 +3,45 @@
 {% block title %}Questions{% endblock %}
 
 {% block body %}
-<div class="w-full flex min-h-screen">
+<div class="w-full flex flex-col lg:flex-row min-h-screen">
 
-    <div class="w-[22%] shrink-0 flex flex-col gap-4 p-4">
-        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 flex flex-col gap-4 shadow-sm">
+    <div class="lg:w-[22%] lg:shrink-0 flex flex-col gap-4 p-4">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden">
 
-            <h2 class="text-sm font-bold text-gray-800 dark:text-gray-100 uppercase tracking-wide">Filter</h2>
-
-            <div class="flex flex-col gap-1">
-                <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Search</label>
-                <input type="text" id="search-input" value="{{ search }}"
-                       placeholder="Search questions..."
-                       class="border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400 dark:placeholder-gray-500">
+            <div class="px-4 pt-4">
+                <h2 class="text-sm font-bold text-gray-800 dark:text-gray-100 uppercase tracking-wide mb-3">Filter</h2>
+                <div class="flex flex-col gap-1 mb-3">
+                    <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Search</label>
+                    <div class="relative">
+                        <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <svg id="search-spinner" class="hidden absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-500 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        <input type="text" id="search-input" value="{{ search }}"
+                               placeholder="Search questions..."
+                               class="border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl pl-9 pr-8 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400 dark:placeholder-gray-500">
+                        <button id="search-clear" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex flex-col gap-2">
-                <label class="text-xs font-medium text-gray-500 dark:text-gray-400">Tags</label>
-                <div class="flex flex-wrap gap-1.5">
+            <button id="filter-toggle" class="lg:hidden w-full flex items-center justify-between px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700">
+                Filter by tag
+                <svg id="filter-chevron" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+
+            <div id="filter-panel" class="hidden lg:block px-4 pb-4">
+                <label class="hidden lg:block text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Tags</label>
+                <div class="flex flex-wrap gap-1.5 pt-2 lg:pt-0">
                     {% for tag in tags|slice(0, 15) %}
                         <button data-tag="{{ tag.naam }}" onclick="selectTag({{ tag.naam|json_encode }})"
                                 class="tag-btn text-xs font-medium px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all">
@@ -27,39 +49,49 @@
                         </button>
                     {% endfor %}
                 </div>
+                <button id="clear-filter" class="mt-3 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors text-left">
+                    ✕ Clear filter
+                </button>
             </div>
-
-            <button id="clear-filter" class="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors text-left">
-                ✕ Clear filter
-            </button>
 
         </div>
     </div>
 
-    <div class="w-[78%] flex flex-col gap-4 p-4">
+    <div class="flex-1 flex flex-col gap-4 p-4">
 
-        <div class="flex items-center justify-between">
-            <div class="flex gap-3 flex-wrap" id="filter-buttons">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto" id="filter-buttons">
+                <button onclick="setFilter('my')" data-filter="my"
+                   class="filter-btn py-2 px-4 border rounded-xl font-semibold text-sm {{ filter == 'my' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600' }}">
+                    My Questions
+                </button>
                 <button onclick="setFilter('all')" data-filter="all"
-                   class="filter-btn py-2 px-4 border rounded-xl font-semibold {{ filter == 'all' ? 'bg-blue-700 text-white border-blue-700' : 'bg-white hover:bg-gray-100 text-gray-600 border-gray-300' }}">
+                   class="filter-btn py-2 px-4 border rounded-xl font-semibold text-sm {{ filter == 'all' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600' }}">
                     Questions
                 </button>
                 <button onclick="setFilter('open')" data-filter="open"
-                   class="filter-btn py-2 px-4 border rounded-xl font-semibold {{ filter == 'open' ? 'bg-blue-700 text-white border-blue-700' : 'bg-white hover:bg-gray-100 text-gray-600 border-gray-300' }}">
+                   class="filter-btn py-2 px-4 border rounded-xl font-semibold text-sm {{ filter == 'open' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600' }}">
                     Open
                 </button>
                 <button onclick="setFilter('closed')" data-filter="closed"
-                   class="filter-btn py-2 px-4 border rounded-xl font-semibold {{ filter == 'closed' ? 'bg-blue-700 text-white border-blue-700' : 'bg-white hover:bg-gray-100 text-gray-600 border-gray-300' }}">
+                   class="filter-btn py-2 px-4 border rounded-xl font-semibold text-sm {{ filter == 'closed' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600' }}">
                     Closed
                 </button>
-                <button onclick="setFilter('my')" data-filter="my"
-                   class="filter-btn py-2 px-4 border rounded-xl font-semibold {{ filter == 'my' ? 'bg-blue-700 text-white border-blue-700' : 'bg-white hover:bg-gray-100 text-gray-600 border-gray-300' }}">
-                    My Questions
-                </button>
             </div>
-            {% if not is_guest %}
+            {% if is_guest %}
+            <div class="relative group">
+                <button disabled
+                    class="bg-indigo-300 dark:bg-indigo-900 text-white py-2 px-4 rounded-xl font-semibold text-sm whitespace-nowrap cursor-not-allowed opacity-60">
+                    + New Question
+                </button>
+                <div class="absolute top-full right-0 mt-2 w-48 bg-gray-900 text-white text-xs rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 text-center z-[60]">
+                    <div class="absolute bottom-full right-4 border-4 border-transparent border-b-gray-900"></div>
+                    Sign in with your personal account to ask questions
+                </div>
+            </div>
+            {% else %}
             <a href="{{ path('create-question') }}"
-               class="bg-blue-700 text-white py-2 px-4 rounded-xl inline-block text-center">
+               class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-xl inline-block text-center font-semibold text-sm transition-colors whitespace-nowrap">
                 + New Question
             </a>
             {% endif %}
@@ -77,112 +109,178 @@
 
         <p id="no-results" class="hidden text-center text-gray-400 dark:text-gray-500 py-10">No questions found.</p>
 
+        <div id="load-more-wrap" class="flex justify-center py-4 hidden">
+            <button id="load-more-btn" class="px-6 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 rounded-xl font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
+                Load more
+            </button>
+        </div>
+
+
     </div>
 </div>
 
 <script>
 (function () {
-    let currentFilter = '{{ filter }}';
-    let selectedTag = null;
-    let searchTimeout = null;
+    var PAGE_SIZE = 10;
+    var currentFilter = '{{ filter }}';
+    var selectedTag = null;
+    var allResults = [];
+    var displayedCount = 0;
+    var currentAbort = null;
 
-    const container  = document.getElementById('vragen-container');
-    const countEl    = document.getElementById('vragen-count');
-    const noResults  = document.getElementById('no-results');
-    const searchInput = document.getElementById('search-input');
+    var container     = document.getElementById('vragen-container');
+    var countEl       = document.getElementById('vragen-count');
+    var noResults     = document.getElementById('no-results');
+    var searchInput   = document.getElementById('search-input');
+    var loadMoreWrap  = document.getElementById('load-more-wrap');
+    var searchIcon    = document.getElementById('search-icon');
+    var searchSpinner = document.getElementById('search-spinner');
+    var searchClear   = document.getElementById('search-clear');
+
+    function setSearchState(loading) {
+        searchIcon.classList.toggle('hidden', loading);
+        searchSpinner.classList.toggle('hidden', !loading);
+    }
+
+    function updateClearBtn() {
+        searchClear.classList.toggle('hidden', searchInput.value === '');
+    }
+
+    searchClear.addEventListener('click', function() {
+        searchInput.value = '';
+        updateClearBtn();
+        load();
+    });
+
+    // Filter panel toggle (mobile)
+    var filterToggle  = document.getElementById('filter-toggle');
+    var filterPanel   = document.getElementById('filter-panel');
+    var filterChevron = document.getElementById('filter-chevron');
+    if (filterToggle) {
+        filterToggle.addEventListener('click', function() {
+            filterPanel.classList.toggle('hidden');
+            filterChevron.style.transform = filterPanel.classList.contains('hidden') ? '' : 'rotate(180deg)';
+        });
+    }
 
     function buildCard(v) {
-        const tags = v.tags.map(t =>
-            `<span class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">${t}</span>`
-        ).join('');
-        const status = v.status === 'Open'
-            ? `<span class="bg-green-100 text-green-700 border border-green-300 rounded-xl py-1 px-3 text-sm font-semibold whitespace-nowrap h-8">Open</span>`
-            : `<span class="bg-red-100 text-red-700 border border-red-300 rounded-xl py-1 px-3 text-sm font-semibold whitespace-nowrap h-8">Closed</span>`;
+        var tags = v.tags.map(function(t) {
+            return '<span class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700 rounded-full py-0.5 px-3 text-xs font-medium">' + t + '</span>';
+        }).join('');
+        var status = v.status === 'Open'
+            ? '<span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 rounded-full py-0.5 px-3 text-xs font-semibold whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>Open</span>'
+            : '<span class="inline-flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 rounded-full py-0.5 px-3 text-xs font-semibold whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-red-500 inline-block"></span>Closed</span>';
 
-        return `<a href="/anwser-question/${v.id}"
-            class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200">
-            <div class="flex sm:flex-col gap-2 sm:gap-3 sm:w-24 shrink-0">
-                <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-2 px-3 flex flex-col items-center text-sm font-semibold w-full">
-                    <span class="text-xs font-normal opacity-70">Votes</span><span>${v.upvotes}</span>
-                </div>
-                <div class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 rounded-xl py-2 px-3 flex flex-col items-center text-sm font-semibold w-full">
-                    <span class="text-xs font-normal opacity-70">Answers</span><span>${v.antwoorden}</span>
-                </div>
-                <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700 rounded-xl py-2 px-3 flex flex-col items-center text-sm font-semibold w-full">
-                    <span class="text-xs font-normal opacity-70">Views</span><span>${v.views}</span>
-                </div>
-            </div>
-            <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
-                <h2 class="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-snug">${v.titel}</h2>
-                <span class="text-gray-600 dark:text-gray-400 text-sm">${v.beschrijving}</span>
-                <div class="flex flex-wrap gap-2">${tags}</div>
-            </div>
-            ${status}
-        </a>`;
+        return '<a href="/anwser-question/' + v.id + '"'
+            + ' class="group border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md hover:border-indigo-300 dark:hover:border-indigo-600 transition-all duration-200 cursor-pointer block">'
+            + '<div class="flex sm:flex-col gap-2 sm:gap-3 sm:w-20 shrink-0 text-center">'
+            + '<div class="bg-gray-50 dark:bg-gray-700/60 border border-gray-200 dark:border-gray-600 rounded-xl py-2 px-3 flex flex-col items-center w-full"><span class="text-base font-bold text-blue-600 dark:text-blue-400">' + v.upvotes + '</span><span class="text-xs text-gray-400 dark:text-gray-500">votes</span></div>'
+            + '<div class="bg-gray-50 dark:bg-gray-700/60 border border-gray-200 dark:border-gray-600 rounded-xl py-2 px-3 flex flex-col items-center w-full"><span class="text-base font-bold text-emerald-600 dark:text-emerald-400">' + v.antwoorden + '</span><span class="text-xs text-gray-400 dark:text-gray-500">answers</span></div>'
+            + '<div class="bg-gray-50 dark:bg-gray-700/60 border border-gray-200 dark:border-gray-600 rounded-xl py-2 px-3 flex flex-col items-center w-full"><span class="text-base font-bold text-gray-500 dark:text-gray-400">' + v.views + '</span><span class="text-xs text-gray-400 dark:text-gray-500">views</span></div>'
+            + '</div>'
+            + '<div class="flex-1 flex flex-col min-w-0">'
+            + '<h2 class="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-snug group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-2">' + v.titel + '</h2>'
+            + '<span class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 flex-1 mb-3">' + v.beschrijving + '</span>'
+            + '<div class="flex flex-wrap gap-2">' + tags + '</div>'
+            + '</div>'
+            + '<div class="flex flex-row items-center justify-between sm:flex-col sm:items-end sm:justify-between gap-2 shrink-0">'
+            + status
+            + '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-indigo-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>'
+            + '</div>'
+            + '</a>';
+    }
+
+    function renderPage() {
+        var slice = allResults.slice(0, displayedCount);
+        container.style.opacity = '0';
+        container.style.transition = 'opacity 0.15s ease';
+        container.innerHTML = slice.map(buildCard).join('');
+        requestAnimationFrame(function() { container.style.opacity = '1'; });
+        var remaining = allResults.length - displayedCount;
+        loadMoreWrap.classList.toggle('hidden', remaining <= 0);
+        noResults.classList.toggle('hidden', allResults.length > 0);
+        countEl.textContent = allResults.length + ' Questions Found';
     }
 
     function load() {
-        const search = searchInput.value.trim();
-        const params = new URLSearchParams({ filter: currentFilter, search });
+        if (currentAbort) currentAbort.abort();
+        currentAbort = new AbortController();
+
+        var search = searchInput.value.trim();
+        var params = new URLSearchParams({ filter: currentFilter, search: search });
         if (selectedTag) params.set('tag', selectedTag);
 
-        fetch('/questions/load?' + params)
-            .then(r => r.json())
-            .then(data => {
-                container.innerHTML = data.vragen.map(buildCard).join('');
-                countEl.textContent = data.total + ' Questions Found';
-                noResults.classList.toggle('hidden', data.total > 0);
-            });
+        setSearchState(true);
+        loadMoreWrap.classList.add('hidden');
+
+        fetch('/questions/load?' + params, { signal: currentAbort.signal })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                allResults = data.vragen;
+                displayedCount = Math.min(PAGE_SIZE, allResults.length);
+                renderPage();
+                setSearchState(false);
+            })
+            .catch(function() {});
     }
+
+    var ACTIVE_CLS   = 'filter-btn py-2 px-4 border rounded-xl font-semibold text-sm bg-indigo-600 text-white border-indigo-600';
+    var INACTIVE_CLS = 'filter-btn py-2 px-4 border rounded-xl font-semibold text-sm bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600';
 
     function setFilter(filter) {
         currentFilter = filter;
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            const active = btn.dataset.filter === filter;
-            btn.classList.toggle('bg-blue-700', active);
-            btn.classList.toggle('text-white', active);
-            btn.classList.toggle('border-blue-700', active);
-            btn.classList.toggle('bg-white', !active);
-            btn.classList.toggle('text-gray-600', !active);
-            btn.classList.toggle('border-gray-300', !active);
+        document.querySelectorAll('.filter-btn').forEach(function(btn) {
+            btn.className = btn.dataset.filter === filter ? ACTIVE_CLS : INACTIVE_CLS;
         });
         load();
     }
 
-    window.selectTag = function (tagNaam) {
-        if (selectedTag === tagNaam) {
-            selectedTag = null;
-        } else {
-            selectedTag = tagNaam;
-        }
-        document.querySelectorAll('button[data-tag]').forEach(btn => {
-            const active = btn.getAttribute('data-tag') === selectedTag;
-            btn.classList.toggle('bg-indigo-500', active);
-            btn.classList.toggle('text-white', active);
-            btn.classList.toggle('border-indigo-500', active);
-            btn.classList.toggle('bg-gray-100', !active);
-            btn.classList.toggle('text-gray-600', !active);
-            btn.classList.toggle('border-gray-200', !active);
+    var TAG_OFF = 'tag-btn text-xs font-medium px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all';
+    var TAG_ON  = 'tag-btn text-xs font-medium px-2.5 py-1 rounded-full border border-indigo-500 bg-indigo-500 text-white transition-all';
+
+    window.selectTag = function(tagNaam) {
+        selectedTag = selectedTag === tagNaam ? null : tagNaam;
+        document.querySelectorAll('button[data-tag]').forEach(function(btn) {
+            btn.className = btn.getAttribute('data-tag') === selectedTag ? TAG_ON : TAG_OFF;
         });
         load();
     };
 
-    document.getElementById('clear-filter').addEventListener('click', function () {
+    document.getElementById('clear-filter').addEventListener('click', function() {
         selectedTag = null;
         searchInput.value = '';
-        document.querySelectorAll('button[data-tag]').forEach(btn => {
-            btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
-            btn.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+        updateClearBtn();
+        document.querySelectorAll('button[data-tag]').forEach(function(btn) {
+            btn.className = TAG_OFF;
         });
         load();
     });
 
+    document.getElementById('load-more-btn').addEventListener('click', function() {
+        displayedCount = Math.min(displayedCount + PAGE_SIZE, allResults.length);
+        renderPage();
+    });
+
     window.setFilter = setFilter;
 
-    searchInput.addEventListener('input', function () {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(load, 300);
+    searchInput.addEventListener('input', function() {
+        updateClearBtn();
+        load();
     });
+
+    updateClearBtn();
+
+    // Infinite scroll
+    window.addEventListener('scroll', function() {
+        if (loadMoreWrap.classList.contains('hidden')) return;
+        var rect = loadMoreWrap.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 200) {
+            displayedCount = Math.min(displayedCount + PAGE_SIZE, allResults.length);
+            renderPage();
+        }
+    });
+
+    load();
 })();
 </script>
 {% endblock %}

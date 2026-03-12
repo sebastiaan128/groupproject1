@@ -64,12 +64,13 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/create-question', name: 'create-question')]
-    public function createQuestion(Request $request): Response
+    public function createQuestion(Request $request, EntityManagerInterface $em): Response
     {
         if ($request->getSession()->get('is_guest')) {
             return $this->redirectToRoute('questions');
         }
-        return $this->render('create-question.html.twig');
+        $tags = $em->getRepository(Tags::class)->findAll();
+        return $this->render('create-question.html.twig', ['tags' => $tags]);
     }
 
     #[Route('/anwser-question/{id}', name: 'anwser-question')]
@@ -114,6 +115,12 @@ class QuestionController extends AbstractController
         $vraag->setDownvotes(0);
         $vraag->setUpvotes(0);
         $vraag->setViews(0);
+
+        foreach ($request->request->all('tags') as $tagId) {
+            $tag = $em->getRepository(Tags::class)->find((int) $tagId);
+            if ($tag) $vraag->addTag($tag);
+        }
+
         $em->persist($vraag);
         $em->flush();
 

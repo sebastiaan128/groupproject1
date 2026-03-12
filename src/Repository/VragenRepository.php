@@ -39,7 +39,7 @@ class VragenRepository extends ServiceEntityRepository
             $qb->andWhere('v.profiel = :profielId')->setParameter('profielId', $profielId);
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb->orderBy('v.id', 'DESC')->getQuery()->getResult();
     }
 }
 

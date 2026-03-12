@@ -1,123 +1,151 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Question{% endblock %}
+{% block title %}{{ vraag.titel }}{% endblock %}
 
 {% block body %}
-    <div class="flex mt-7">
+    <div class="flex mt-7 px-4">
         <div class="flex-1"></div>
 
-        <div class="w-full max-w-6xl">
+        <div class="w-full max-w-4xl">
+
             <a href="{{ path('questions') }}"
-               class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-300 rounded-xl flex items-center justify-center gap-2 text-center inline-flex">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                     stroke="currentColor"
-                     class="size-5">
+               class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                     stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
                 </svg>
-                Questions
+                Back to Questions
             </a>
-            <div
-                class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200 mt-5">
-                <div class="flex sm:flex-col gap-2 sm:gap-3 sm:w-16 shrink-0">
-                    <button onclick="vote('vraag', {{ vraag.id }}, 'up', this)"
-                        class="vote-btn {{ vraagStem == 'up' ? 'bg-green-400 text-white border-green-500' : 'bg-green-100 text-green-700 border-green-300' }} dark:border-green-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                        </svg>
-                    </button>
-                    <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
-                        <span>Votes</span>
-                        <span id="vraag-score">{{ vraag.upvotes - vraag.downvotes }}</span>
-                    </div>
-                    <button onclick="vote('vraag', {{ vraag.id }}, 'down', this)"
-                        class="vote-btn {{ vraagStem == 'down' ? 'bg-red-400 text-white border-red-500' : 'bg-red-100 text-red-700 border-red-300' }} dark:border-red-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border w-full">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                        </svg>
-                    </button>
+
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden mb-6">
+
+                <div class="flex items-center justify-between px-6 py-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
+                    <span class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Question</span>
+                    {% if vraag.status == 'Open' %}
+                        <span class="inline-flex items-center gap-1.5 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-700 rounded-full py-0.5 px-3 text-xs font-semibold">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>Open
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-1.5 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-700 rounded-full py-0.5 px-3 text-xs font-semibold">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 inline-block"></span>Closed
+                        </span>
+                    {% endif %}
                 </div>
 
-                <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
-                    <h2 class="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-snug">
-                        {{ vraag.titel }}
-                    </h2>
-                    <span>{{ vraag.beschrijving }}</span>
-                    <div class="flex flex-wrap gap-2 border-b-2 border-b-gray-400 mb-2">
-                        {% for tag in vraag.tags %}
-                            <span
-                                class="mb-4 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">{{ tag.naam }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="font-light">{{ vraag.views }} Views</span>
-                        <div class="flex items-center gap-2">
-                            <img class="rounded-full" src="https://picsum.photos/40" alt="profilepicture">
-                            <span class="font-semibold">{{ vraag.profiel.name }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <span>{{ vraag.antwoorden|length }} Answers</span>
+                <div class="flex gap-4 p-6">
 
-            {% for antwoord in vraag.antwoorden %}
-                <div
-                    class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200 mt-5">
-                    <div class="flex sm:flex-col gap-2 sm:gap-3 sm:w-16 shrink-0">
-                        <button onclick="vote('antwoord', {{ antwoord.id }}, 'up', this)"
-                            class="vote-btn {{ antwoordStemmen[antwoord.id] == 'up' ? 'bg-green-400 text-white border-green-500' : 'bg-green-100 text-green-700 border-green-300' }} rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border w-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <div class="vote-col flex flex-col items-center gap-2 shrink-0 w-14">
+                        <button onclick="vote('vraag', {{ vraag.id }}, 'up', this)"
+                            class="vote-btn {{ vraagStem == 'up' ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                             </svg>
                         </button>
-                        <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-700 rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold w-full">
-                            <span>Votes</span>
-                            <span class="antwoord-score" data-id="{{ antwoord.id }}">{{ antwoord.upvotes - antwoord.downvotes }}</span>
+                        <div class="flex flex-col items-center">
+                            <span id="vraag-score" class="text-xl font-bold text-gray-800 dark:text-gray-100">{{ vraag.upvotes - vraag.downvotes }}</span>
+                            <span class="text-xs text-gray-400 dark:text-gray-500">votes</span>
                         </div>
-                        <button onclick="vote('antwoord', {{ antwoord.id }}, 'down', this)"
-                            class="vote-btn {{ antwoordStemmen[antwoord.id] == 'down' ? 'bg-red-400 text-white border-red-500' : 'bg-red-100 text-red-700 border-red-300' }} rounded-xl py-3 px-4 flex flex-col items-center text-sm font-semibold cursor-pointer border w-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <button onclick="vote('vraag', {{ vraag.id }}, 'down', this)"
+                            class="vote-btn {{ vraagStem == 'down' ? 'bg-red-500 text-white border-red-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                             </svg>
                         </button>
                     </div>
 
-                    <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
-                        <span>{{ antwoord.beschrijving }}</span>
-                        <div class="flex justify-between border-t-2 border-t-gray-400 pt-2">
-                            <div></div>
+                    <div class="flex-1 flex flex-col min-w-0">
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100 leading-snug mb-3">
+                            {{ vraag.titel }}
+                        </h1>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-wrap flex-1 mb-4">{{ vraag.beschrijving }}</p>
+
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for tag in vraag.tags %}
+                                <span class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700 rounded-full py-0.5 px-3 text-xs font-medium">{{ tag.naam }}</span>
+                            {% endfor %}
+                        </div>
+
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <span class="text-xs text-gray-400 dark:text-gray-500">{{ vraag.views }} views</span>
                             <div class="flex items-center gap-2">
-                                <img class="rounded-full" src="https://picsum.photos/40" alt="profilepicture">
-                                <span class="font-semibold">{{ antwoord.profiel.name }}</span>
+                                <img class="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 dark:ring-gray-600" src="https://picsum.photos/40" alt="Profile picture">
+                                <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ vraag.profiel.name }}</span>
                             </div>
                         </div>
                     </div>
-                </div>            {% endfor %}
-
-            {% if not is_guest %}
-            <div
-                class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mb-3 flex flex-col sm:flex-row gap-4 shadow-sm hover:shadow-md transition-shadow duration-200 mt-5">
-                <div class="flex-1 flex flex-col justify-between gap-3 min-w-0">
-                    <span class="text-2xl font-semibold">Your Anwser</span>
-                    <div class="flex justify-between pt-2 w-full py-3">
-                        <form action="/submit-anwser" method="POST" class="w-full">
-                        <input type="hidden" name="vraag_id" value="{{ vraag.id }}">
-                        <textarea
-                            name="antwoord"
-                            placeholder="Write your answer here..."
-                            class="border rounded-lg border-gray-300 resize-none mt-1 w-full"
-                            style="padding: 16px;"
-                            rows="7"
-                        ></textarea>
-                        <button type="submit" class="mt-3 px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold">Post Answer</button>
-                    </form>
-                    </div>
                 </div>
             </div>
+
+            <div class="flex items-center gap-3 mb-4">
+                <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">
+                    {{ vraag.antwoorden|length }} {{ vraag.antwoorden|length == 1 ? 'Answer' : 'Answers' }}
+                </h2>
+                <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+            </div>
+
+            {% for antwoord in vraag.antwoorden %}
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden mb-4">
+                    <div class="flex gap-4 p-6">
+
+                        <div class="vote-col flex flex-col items-center gap-2 shrink-0 w-14">
+                            <button onclick="vote('antwoord', {{ antwoord.id }}, 'up', this)"
+                                class="vote-btn {{ antwoordStemmen[antwoord.id] == 'up' ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                </svg>
+                            </button>
+                            <div class="flex flex-col items-center">
+                                <span class="antwoord-score text-xl font-bold text-gray-800 dark:text-gray-100" data-id="{{ antwoord.id }}">{{ antwoord.upvotes - antwoord.downvotes }}</span>
+                                <span class="text-xs text-gray-400 dark:text-gray-500">votes</span>
+                            </div>
+                            <button onclick="vote('antwoord', {{ antwoord.id }}, 'down', this)"
+                                class="vote-btn {{ antwoordStemmen[antwoord.id] == 'down' ? 'bg-red-500 text-white border-red-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="flex-1 flex flex-col min-w-0">
+                            <p class="text-gray-700 dark:text-gray-200 text-sm leading-relaxed whitespace-pre-wrap flex-1 mb-4">{{ antwoord.beschrijving }}</p>
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700 mt-auto">
+                                <span class="text-xs text-gray-400 dark:text-gray-500">{{ antwoord.upvotes - antwoord.downvotes }} votes</span>
+                                <div class="flex items-center gap-2">
+                                    <img class="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200 dark:ring-gray-600" src="https://picsum.photos/40" alt="Profile picture">
+                                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">{{ antwoord.profiel.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if not is_guest %}
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm p-6 mt-6">
+                <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">Your Answer</h3>
+                <form action="/submit-anwser" method="POST">
+                    <input type="hidden" name="vraag_id" value="{{ vraag.id }}">
+                    <textarea
+                        name="antwoord"
+                        placeholder="Write your answer here..."
+                        class="w-full border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-xl px-4 py-3 resize-none text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400 dark:placeholder-gray-500"
+                        rows="7"
+                    ></textarea>
+                    <div class="flex justify-end mt-3">
+                        <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold text-sm transition-colors">
+                            Post Answer
+                        </button>
+                    </div>
+                </form>
+            </div>
             {% else %}
-            <div class="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-2xl p-4 mt-5 text-center text-gray-500 dark:text-gray-400">
-                Je moet ingelogd zijn om een antwoord te plaatsen.
+            <div class="bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 mt-6 text-center">
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Sign in with your personal account to post an answer.</p>
+                <a href="{{ path('login') }}" class="inline-block mt-3 px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition-colors">Sign in</a>
             </div>
             {% endif %}
+
         </div>
 
         <div class="flex-1"></div>
@@ -126,48 +154,43 @@
 
 {% block javascripts %}
 <script>
-function vote(type, id, richting, btn) {
-    fetch(`/vote/${type}/${id}/${richting}`, { method: 'POST' })
-        .then(r => r.json())
-        .then(data => {
+function vote(entityType, id, direction, btn) {
+    var col    = btn.parentElement;
+    var upBtn  = col.querySelector('button:first-child');
+    var dnBtn  = col.querySelector('button:last-child');
+
+    fetch('/vote/' + entityType + '/' + id + '/' + direction, { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
             if (data.error) return;
 
-            const score = data.upvotes - data.downvotes;
-            const container = btn.closest('.flex.sm\\:flex-col');
-            const upBtn   = container.querySelector('button:first-child');
-            const downBtn = container.querySelector('button:last-child');
+            var score = data.upvotes - data.downvotes;
 
-            if (type === 'vraag') {
+            if (entityType === 'vraag') {
                 document.getElementById('vraag-score').textContent = score;
             } else {
-                const scoreEl = document.querySelector(`.antwoord-score[data-id="${id}"]`);
+                var scoreEl = document.querySelector('.antwoord-score[data-id="' + id + '"]');
                 if (scoreEl) scoreEl.textContent = score;
             }
 
-            resetVoteBtn(upBtn,   'green');
-            resetVoteBtn(downBtn, 'red');
-            if (data.userVote === 'up')   activateVoteBtn(upBtn,   'green');
-            if (data.userVote === 'down') activateVoteBtn(downBtn, 'red');
+            resetVoteBtn(upBtn);
+            resetVoteBtn(dnBtn);
+            if (data.userVote === 'up')   activateVoteBtn(upBtn, 'up');
+            if (data.userVote === 'down') activateVoteBtn(dnBtn, 'down');
         });
 }
 
-function resetVoteBtn(btn, color) {
-    if (color === 'green') {
-        btn.classList.remove('bg-green-400', 'text-white', 'border-green-500');
-        btn.classList.add('bg-green-100', 'text-green-700', 'border-green-300');
-    } else {
-        btn.classList.remove('bg-red-400', 'text-white', 'border-red-500');
-        btn.classList.add('bg-red-100', 'text-red-700', 'border-red-300');
-    }
+function resetVoteBtn(btn) {
+    btn.classList.remove('bg-indigo-500', 'bg-red-500', 'text-white', 'border-indigo-600', 'border-red-600');
+    btn.classList.add('bg-gray-100', 'text-gray-500', 'border-gray-200');
 }
 
-function activateVoteBtn(btn, color) {
-    if (color === 'green') {
-        btn.classList.remove('bg-green-100', 'text-green-700', 'border-green-300');
-        btn.classList.add('bg-green-400', 'text-white', 'border-green-500');
+function activateVoteBtn(btn, dir) {
+    btn.classList.remove('bg-gray-100', 'text-gray-500', 'border-gray-200');
+    if (dir === 'up') {
+        btn.classList.add('bg-indigo-500', 'text-white', 'border-indigo-600');
     } else {
-        btn.classList.remove('bg-red-100', 'text-red-700', 'border-red-300');
-        btn.classList.add('bg-red-400', 'text-white', 'border-red-500');
+        btn.classList.add('bg-red-500', 'text-white', 'border-red-600');
     }
 }
 </script>
