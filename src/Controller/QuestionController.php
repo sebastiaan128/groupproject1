@@ -12,6 +12,7 @@ use App\Repository\StemmenRepository;
 use App\Entity\Tags;
 use App\Entity\vragen;
 use App\Entity\Antwoorden;
+use App\Entity\Notificatie;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\ProfielRepository;
 
@@ -49,14 +50,14 @@ class QuestionController extends AbstractController
 
         $data = array_map(function ($v) {
             return [
-                'id'         => $v->getId(),
-                'titel'      => $v->getTitel(),
+                'id'           => $v->getId(),
+                'titel'        => $v->getTitel(),
                 'beschrijving' => $v->getBeschrijving(),
-                'upvotes'    => $v->getUpvotes(),
-                'antwoorden' => count($v->getAntwoorden()),
-                'views'      => $v->getViews(),
-                'status'     => $v->getStatus(),
-                'tags'       => array_map(fn($t) => $t->getNaam(), $v->getTags()->toArray()),
+                'upvotes'      => $v->getUpvotes(),
+                'antwoorden'   => count($v->getAntwoorden()),
+                'views'        => $v->getViews(),
+                'status'       => $v->getStatus(),
+                'tags'         => array_map(fn($t) => $t->getNaam(), $v->getTags()->toArray()),
             ];
         }, $vragen);
 
@@ -97,14 +98,15 @@ class QuestionController extends AbstractController
             'antwoordStemmen' => $antwoordStemmen,
         ]);
     }
+
     #[Route('/submit-question', name: 'submit-question', methods: ['POST'])]
-    public function submitQuestion(request $request, EntityManagerInterface $em, ProfielRepository $profielRepository ): Response
+    public function submitQuestion(request $request, EntityManagerInterface $em, ProfielRepository $profielRepository): Response
     {
         if ($request->getSession()->get('is_guest')) {
             return $this->redirectToRoute('questions');
         }
         $profielId = $request->getSession()->get('profiel_id');
-        $profiel = $profielRepository->find($profielId);
+        $profiel   = $profielRepository->find($profielId);
 
         $vraag = new vragen();
         $vraag->setTitel($request->request->get('titel'));
@@ -119,6 +121,7 @@ class QuestionController extends AbstractController
 
         return $this->redirectToRoute('questions');
     }
+
     #[Route('/submit-anwser', name: 'submit-anwser', methods: ['POST'])]
     public function submitAnwser(Request $request, EntityManagerInterface $em, ProfielRepository $profielRepository, VragenRepository $vragenRepository): Response
     {
@@ -126,8 +129,8 @@ class QuestionController extends AbstractController
             return $this->redirectToRoute('questions');
         }
         $profielId = $request->getSession()->get('profiel_id');
-        $profiel = $profielRepository->find($profielId);
-        $vraag = $vragenRepository->find($request->request->get('vraag_id'));
+        $profiel   = $profielRepository->find($profielId);
+        $vraag     = $vragenRepository->find($request->request->get('vraag_id'));
 
         $antwoord = new Antwoorden();
         $antwoord->setBeschrijving($request->request->get('antwoord'));
@@ -135,13 +138,21 @@ class QuestionController extends AbstractController
         $antwoord->setDownvotes(0);
         $antwoord->setProfiel($profiel);
         $antwoord->setVraag($vraag);
-
         $em->persist($antwoord);
+
+        // Notificatie sturen naar vraagsteller (niet naar jezelf)
+        $vraagsteller = $vraag->getProfiel();
+        if ($vraagsteller && $vraagsteller->getId() !== $profiel->getId()) {
+            $notificatie = new Notificatie();
+            $notificatie->setProfiel($vraagsteller);
+            $notificatie->setVraag($vraag);
+            $notificatie->setBericht($profiel->getName() . ' heeft een antwoord geplaatst op jouw vraag "' . $vraag->getTitel() . '"');
+            $notificatie->setAangemaaktOp(new \DateTime());
+            $em->persist($notificatie);
+        }
+
         $em->flush();
 
         return $this->redirectToRoute('anwser-question', ['id' => $vraag->getId()]);
     }
 }
-
-
-

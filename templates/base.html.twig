@@ -16,7 +16,8 @@
             }
             (function () {
                 var favicon = document.getElementById('favicon');
-                if (favicon && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                var isDark = localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (favicon && isDark) {
                     favicon.href = '/assets/logo/favicon_Light.png';
                 }
             })();
