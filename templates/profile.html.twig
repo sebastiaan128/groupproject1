@@ -3,14 +3,13 @@
 {% block title %}My Profile{% endblock %}
 
 {% block body %}
+{{ form_start(form, {'attr': {'id': 'ProfileType'}}) }}
 <div class="main">
     <h1>My Profile</h1>
     <div class="container dark:border-gray-700 bg-white dark:bg-gray-800">
-        <div class="upper">
             <div>
-
                 <a href="{{ path('profile') }}"
-                    class="hidden sm:flex avatar-glass w-17.5 h-17.5 rounded-full items-center justify-center text-sm font-semibold cursor-pointer transition-all text-gray-700 dark:text-gray-200">
+                    class="hidden sm:flex avatar-glass w-17.5 h-17.5 rounded-full items-center justify-center">
                     <img id="desktop-avatar" src="/assets/logo/profile.png" alt="User Avatar"
                         class="w-full h-full rounded-full object-cover">
                 </a>
@@ -23,86 +22,132 @@
                     <div class="field">
                         <h3>Name</h3>
                         <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text" class="profile-input" disabled>
+                            {{ form_widget(form.name, {'attr': {'class': 'profile-input', 'disabled': true}}) }}
                         </div>
+                        {% if form.name.vars.errors|length > 0 %}
+                        <p class="text-red-500 text-sm mt-1">{{ form_errors(form.name) }}</p>
+                        {% endif %}
                     </div>
-                    <div class="field ">
+
+                    <div class="field">
                         <h3>Email</h3>
                         <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text" class="profile-input" disabled>
+                            {{ form_widget(form.email, {'attr': {'class': 'profile-input', 'disabled': true}}) }}
+                        </div>
+                        {% if form.email.vars.errors|length > 0 %}
+                        <p class="text-red-500 text-sm mt-1">{{ form_errors(form.email) }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="upper">
+                        <div class="field">
+                            <h3>Study</h3>
+                            <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                                {{ form_widget(form.studie, {'attr': {'class': 'profile-input', 'disabled': true}}) }}
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <h3>Year</h3>
+                            <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                                {{ form_widget(form.jaar, {'attr': {'class': 'profile-input', 'disabled': true}}) }}
+                            </div>
+                            {% if form.jaar.vars.errors|length > 0 %}
+                            <p class="text-red-500 text-sm mt-1">{{ form_errors(form.jaar) }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <h3>Bio</h3>
+                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
+                            {{ form_widget(form.bio, {'attr': {'class': 'profile-input', 'disabled': true}}) }}
+                        </div>
+                        {% if form.bio.vars.errors|length > 0 %}
+                        <p class="text-red-500 text-sm mt-1">{{ form_errors(form.bio) }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="container-two dark:border-gray-700 bg-white dark:bg-gray-800">
+                        <h2>Knowledge Tags</h2>
+
+                        {# Huidige tags - altijd zichtbaar #}
+                        <div class="flex flex-wrap gap-2 mb-3" id="tags-display">
+                            {% for tag in profiel.tags %}
+                            <span
+                                class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">
+                                {{ tag.naam }}
+                            </span>
+                            {% else %}
+                            <span class="text-gray-400 text-sm">Geen tags geselecteerd</span>
+                            {% endfor %}
+                        </div>
+
+                        {# Tag selectie - alleen zichtbaar bij edit #}
+                        <div id="tags-edit" class="hidden">
+                            <div class="tags-wrapper">
+                                {{ form_widget(form.tags) }}
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="fields-row">
-                    <div class="field">
-                        <h3>Study</h3>
-                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text" class="profile-input" disabled>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <h3>Year</h3>
-                        <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                            <input type="text" class="profile-input" disabled>
-                        </div>
-                    </div>
+                <div class="save-cancel">
+                    <button type="submit" class="btn-save">
+                        <h3>Save</h3>
+                    </button>
+                    <a href="{{ path('profile') }}" class="btn-cancel dark:border-gray-700 bg-white dark:bg-gray-800">
+                        <h3>Cancel</h3>
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="field">
-            <h3>Bio</h3>
-            <div class="border rounded-lg border-gray-300 resize-none mt-1">
-                <input type="text" class="profile-input" disabled>
-            </div>
-        </div>
-    </div>
-    <div class="container-two dark:border-gray-700 bg-white dark:bg-gray-800">
-        <div class="edit-header">
-            <div class="field">
-                <h2>Knowledge Tags</h2>
-            </div>
+            {{ form_end(form) }}
+            <script>
+                document.querySelector('.edit-btn').addEventListener('click', function () {
+                    const inputs = document.querySelectorAll('.profile-input');
+                    const isDisabled = inputs[0].disabled;
+                    const tagsEdit = document.getElementById('tags-edit');
+                    const tagsDisplay = document.getElementById('tags-display');
 
-        </div>
-        <div class="flex flex-wrap gap-2">
-            <span
-                class="bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg py-0.5 px-2 text-sm">React</span>
-            <span
-                class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded-lg py-0.5 px-2 text-sm">Javascript</span>
-            <span
-                class="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded-lg py-0.5 px-2 text-sm">SQL</span>
-        </div>
-    </div>
-    <div class="save-cancel">
-        <div class="btn-save">
-            <h3>Save</h3>
-        </div>
-        <div class="btn-cancel dark:border-gray-700 bg-white dark:bg-gray-800">
-            <h3>Cancel</h3>
-        </div>
-    </div>
-</div>
-<script>
-    document.querySelector('.edit-btn').addEventListener('click', function () {
-        const inputs = document.querySelectorAll('input');
-        const isDisabled = inputs[0].disabled;
+                    inputs.forEach(input => {
+                        input.disabled = !isDisabled;
+                        const wrapper = input.closest('div');
+                        if (isDisabled) {
+                            wrapper.classList.add('input-active');
+                            wrapper.classList.remove('border-gray-300');
+                            wrapper.classList.add('bg-gray-50', 'dark:bg-gray-700');
+                        } else {
+                            wrapper.classList.remove('input-active');
+                            wrapper.classList.add('border-gray-300');
+                            wrapper.classList.remove('bg-gray-50', 'dark:bg-gray-700');
+                        }
+                    });
 
-        inputs.forEach(input => {
-            input.disabled = !isDisabled;
-            const wrapper = input.closest('div');
-            if (isDisabled) {
-                wrapper.classList.add('input-active');
-                wrapper.classList.remove('border-gray-300');
-                // Achtergrond toevoegen bij edit
-                wrapper.classList.add('bg-gray-50', 'dark:bg-gray-700');
-            } else {
-                wrapper.classList.remove('input-active');
-                wrapper.classList.add('border-gray-300');
-                // Achtergrond verwijderen bij done
-                wrapper.classList.remove('bg-gray-50', 'dark:bg-gray-700');
-            }
-        });
+                    if (isDisabled) {
+                        tagsEdit.classList.remove('hidden');
+                        tagsDisplay.classList.add('hidden');
+                    } else {
+                        tagsEdit.classList.add('hidden');
+                        tagsDisplay.classList.remove('hidden');
+                    }
 
-        this.textContent = isDisabled ? 'Done' : 'Edit';
-    });
-</script>
-{% endblock %}
+                    const hasErrors = document.querySelectorAll('.text-red-500').length > 0;
+                    if (hasErrors) {
+                        const inputs = document.querySelectorAll('.profile-input');
+                        const tagsEdit = document.getElementById('tags-edit');
+                        const tagsDisplay = document.getElementById('tags-display');
+                        const editBtn = document.querySelector('.edit-btn h4');
+
+                        inputs.forEach(input => {
+                            input.disabled = false;
+                            const wrapper = input.closest('div');
+                            wrapper.classList.add('input-active', 'bg-gray-50', 'dark:bg-gray-700');
+                            wrapper.classList.remove('border-gray-300');
+                        });
+
+                        tagsEdit.classList.remove('hidden');
+                        tagsDisplay.classList.add('hidden');
+                        editBtn.textContent = 'Edit';
+                    }
+
+                    this.querySelector('h4').textContent = isDisabled ? 'Edit' : 'Edit';
+                });
+            </script>
+            {% endblock %}
