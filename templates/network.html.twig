@@ -17,7 +17,6 @@
                 </div>
             </div>
 
-            {# Tags: collapsible op mobiel #}
             <button id="filter-toggle" class="lg:hidden w-full flex items-center justify-between px-4 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700">
                 Filter by tag
                 <svg id="filter-chevron" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -51,9 +50,10 @@
 
         <div id="profielen-container" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"></div>
 
-        <div id="sentinel" class="flex justify-center py-6 hidden">
+        <div id="spinner" class="flex justify-center py-6 hidden">
             <div class="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
+        <div id="sentinel" class="h-4"></div>
 
         <p id="no-results" class="hidden text-center text-gray-400 dark:text-gray-500 py-10">No students found.</p>
 
@@ -70,6 +70,7 @@
 
     const container   = document.getElementById('profielen-container');
     const sentinel    = document.getElementById('sentinel');
+    const spinner     = document.getElementById('spinner');
     const countEl     = document.getElementById('profielen-count');
     const noResults   = document.getElementById('no-results');
     const searchInput = document.getElementById('search-name');
@@ -96,7 +97,7 @@
     function loadMore() {
         if (loading || !hasMore) return;
         loading = true;
-        sentinel.classList.remove('hidden');
+        spinner.classList.remove('hidden');
 
         const params = new URLSearchParams({ page, search: searchInput.value.trim() });
         if (selectedTag) params.set('tag', selectedTag);
@@ -108,11 +109,15 @@
                 countEl.textContent = data.total + ' Students Found';
                 hasMore = data.hasMore;
                 noResults.classList.toggle('hidden', data.total > 0);
+                sentinel.classList.toggle('hidden', !hasMore);
                 page++;
             })
             .finally(() => {
                 loading = false;
-                sentinel.classList.add('hidden');
+                spinner.classList.add('hidden');
+                if (hasMore && sentinel.getBoundingClientRect().top <= window.innerHeight) {
+                    loadMore();
+                }
             });
     }
 
@@ -123,24 +128,29 @@
         loadMore();
     }
 
-    // IntersectionObserver for infinite scroll
     const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) loadMore();
-    }, { rootMargin: '200px' });
+    }, { rootMargin: '400px' });
     observer.observe(sentinel);
 
-    // Search
+    ['scroll', 'touchmove'].forEach(function (evt) {
+        window.addEventListener(evt, function () {
+            if (!loading && hasMore && sentinel.getBoundingClientRect().top <= window.innerHeight + 400) {
+                loadMore();
+            }
+        }, { passive: true });
+    });
+
     searchInput.addEventListener('input', function () {
         selectedTag = null;
         document.querySelectorAll('button[data-tag]').forEach(btn => {
             btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
-            btn.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+            btn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-600', 'dark:text-gray-300', 'border-gray-200', 'dark:border-gray-600');
         });
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(reset, 300);
     });
 
-    // Tag filter
     window.selectTag = function (tagNaam) {
         if (selectedTag === tagNaam) {
             selectedTag = null;
@@ -155,24 +165,25 @@
             btn.classList.toggle('text-white', active);
             btn.classList.toggle('border-indigo-500', active);
             btn.classList.toggle('bg-gray-100', !active);
+            btn.classList.toggle('dark:bg-gray-700', !active);
             btn.classList.toggle('text-gray-600', !active);
+            btn.classList.toggle('dark:text-gray-300', !active);
             btn.classList.toggle('border-gray-200', !active);
+            btn.classList.toggle('dark:border-gray-600', !active);
         });
         reset();
     };
 
-    // Clear
     document.getElementById('clear-filter').addEventListener('click', function () {
         selectedTag = null;
         searchInput.value = '';
         document.querySelectorAll('button[data-tag]').forEach(btn => {
             btn.classList.remove('bg-indigo-500', 'text-white', 'border-indigo-500');
-            btn.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+            btn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-600', 'dark:text-gray-300', 'border-gray-200', 'dark:border-gray-600');
         });
         reset();
     });
 
-    // Mobile tags toggle
     const filterToggle  = document.getElementById('filter-toggle');
     const filterPanel   = document.getElementById('filter-panel');
     const filterChevron = document.getElementById('filter-chevron');
@@ -183,7 +194,6 @@
         });
     }
 
-    // Initial load
     loadMore();
 })();
 </script>

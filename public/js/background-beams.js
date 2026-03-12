@@ -68,7 +68,6 @@
         };
     }
 
-    // Draw a 4-pointed sparkle star
     function drawSparkleShape(ctx, x, y, size, rotate, color, alpha) {
         ctx.save();
         ctx.translate(x, y);
@@ -77,7 +76,6 @@
         ctx.shadowBlur  = 12;
         ctx.shadowColor = color;
 
-        // Outer 4-point star
         ctx.beginPath();
         var points = 4;
         for (var i = 0; i < points * 2; i++) {
@@ -90,7 +88,6 @@
         ctx.fillStyle = color;
         ctx.fill();
 
-        // Bright center dot
         ctx.beginPath();
         ctx.arc(0, 0, size * 0.18, 0, Math.PI * 2);
         ctx.fillStyle = '#ffffff';
@@ -179,7 +176,6 @@
             sp.frame++;
             var progress = sp.frame / sp.total;
 
-            // Ease in for first 30%, hold until 70%, ease out
             var alpha;
             if (progress < 0.3) {
                 alpha = progress / 0.3;
