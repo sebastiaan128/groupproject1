@@ -16,29 +16,30 @@ class VragenRepository extends ServiceEntityRepository
         parent::__construct($registry, Vragen::class);
     }
 
-    //    /**
-    //     * @return Vragen[] Returns an array of Vragen objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('v.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findFiltered(string $filter = 'all', string $search = '', ?int $profielId = null, string $tag = ''): array
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->leftJoin('v.profiel', 'p')
+            ->leftJoin('v.tags', 't');
 
-    //    public function findOneBySomeField($value): ?Vragen
-    //    {
-    //        return $this->createQueryBuilder('v')
-    //            ->andWhere('v.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if ($search !== '') {
+            $qb->andWhere('v.titel LIKE :search OR v.beschrijving LIKE :search OR p.name LIKE :search')
+               ->setParameter('search', '%' . $search . '%');
+        }
+
+        if ($tag !== '') {
+            $qb->andWhere('t.naam = :tag')->setParameter('tag', $tag);
+        }
+
+        if ($filter === 'open') {
+            $qb->andWhere('v.status = :status')->setParameter('status', 'Open');
+        } elseif ($filter === 'closed') {
+            $qb->andWhere('v.status = :status')->setParameter('status', 'Closed');
+        } elseif ($filter === 'my' && $profielId) {
+            $qb->andWhere('v.profiel = :profielId')->setParameter('profielId', $profielId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
 
