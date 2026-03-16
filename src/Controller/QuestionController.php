@@ -150,6 +150,10 @@ class QuestionController extends AbstractController
             return $this->redirectToRoute('questions');
         }
 
+        if ($vraag->getStatus() !== 'Open') {
+            return $this->redirectToRoute('anwser-question', ['id' => $vraag->getId()]);
+        }
+
         $antwoord = new Antwoorden();
         $antwoord->setBeschrijving($request->request->get('antwoord'));
         $antwoord->setUpvotes(0);
@@ -158,19 +162,20 @@ class QuestionController extends AbstractController
         $antwoord->setVraag($vraag);
 
         $em->persist($antwoord);
+        $em->flush();
 
         $vraagEigenaar = $vraag->getProfiel();
         if ($vraagEigenaar && $vraagEigenaar->getId() !== $profiel->getId()) {
-            $notificatie = new Notificatie();
-            $notificatie->setProfiel($vraagEigenaar);
-            $notificatie->setVraag($vraag);
-            $bericht = $profiel->getName() . ' answered your question: ' . $vraag->getTitel();
-            $notificatie->setBericht($bericht);
-            $notificatie->setAangemaaktOp(new \DateTime());
-            $em->persist($notificatie);
-            $em->flush();
-
             try {
+                $notificatie = new Notificatie();
+                $notificatie->setProfiel($vraagEigenaar);
+                $notificatie->setVraag($vraag);
+                $bericht = $profiel->getName() . ' answered your question: ' . $vraag->getTitel();
+                $notificatie->setBericht($bericht);
+                $notificatie->setAangemaaktOp(new \DateTime());
+                $em->persist($notificatie);
+                $em->flush();
+
                 $firebase = (new Factory)
                     ->withServiceAccount($_ENV['FIREBASE_CREDENTIALS_PATH'])
                     ->withDatabaseUri($_ENV['FIREBASE_DATABASE_URL']);
@@ -182,11 +187,25 @@ class QuestionController extends AbstractController
                     'gelezen' => false,
                 ]);
             } catch (\Throwable) {}
-        } else {
-            $em->flush();
         }
 
         return $this->redirectToRoute('anwser-question', ['id' => $vraag->getId()]);
+    }
+
+    #[Route('/close-question/{id}', name: 'close-question', methods: ['POST'])]
+    public function closeQuestion(int $id, VragenRepository $vragenRepository, Request $request, EntityManagerInterface $em): Response
+    {
+        $vraag = $vragenRepository->find($id);
+        $profielId = $request->getSession()->get('profiel_id');
+
+        if (!$vraag || $vraag->getProfiel()?->getId() !== $profielId) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $vraag->setStatus('Closed');
+        $em->flush();
+
+        return $this->redirectToRoute('anwser-question', ['id' => $id]);
     }
 }
 

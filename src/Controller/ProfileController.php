@@ -15,20 +15,22 @@ class ProfileController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
-        $profiel = $em->getRepository(Profiel::class)->findOneBy([]);
-    
+        $profielId = $request->getSession()->get('profiel_id');
+        $profiel = $profielId ? $em->getRepository(Profiel::class)->find($profielId) : null;
+
         if (!$profiel) {
-            throw $this->createNotFoundException('Geen profiel gevonden.');
+            return $this->redirectToRoute('login');
         }
-    
+
         $form = $this->createForm(ProfileType::class, $profiel);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
+            $request->getSession()->set('user_name', $profiel->getName());
             return $this->redirectToRoute('profile');
         }
-    
+
         return $this->render('profile.html.twig', [
             'form' => $form,
             'profiel' => $profiel,

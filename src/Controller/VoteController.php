@@ -35,12 +35,14 @@ class VoteController extends AbstractController
         }
 
         $bestaand = $stemmenRepository->findOneBy(['profiel' => $profiel, 'vraag' => $vraag]);
+        $newUserVote = $type;
 
         if ($bestaand) {
             if ($bestaand->getType() === $type) {
                 if ($type === 'up') $vraag->setUpvotes($vraag->getUpvotes() - 1);
                 else $vraag->setDownvotes($vraag->getDownvotes() - 1);
                 $em->remove($bestaand);
+                $newUserVote = null;
             } else {
                 if ($type === 'up') {
                     $vraag->setUpvotes($vraag->getUpvotes() + 1);
@@ -67,7 +69,7 @@ class VoteController extends AbstractController
         return $this->json([
             'upvotes'   => $vraag->getUpvotes(),
             'downvotes' => $vraag->getDownvotes(),
-            'userVote'  => $bestaand && $bestaand->getType() === $type ? null : $type,
+            'userVote'  => $newUserVote,
         ]);
     }
 
@@ -91,12 +93,14 @@ class VoteController extends AbstractController
         }
 
         $bestaand = $stemmenRepository->findOneBy(['profiel' => $profiel, 'antwoord' => $antwoord]);
+        $newUserVote = $type;
 
         if ($bestaand) {
             if ($bestaand->getType() === $type) {
                 if ($type === 'up') $antwoord->setUpvotes($antwoord->getUpvotes() - 1);
                 else $antwoord->setDownvotes($antwoord->getDownvotes() - 1);
                 $em->remove($bestaand);
+                $newUserVote = null;
             } else {
                 if ($type === 'up') {
                     $antwoord->setUpvotes($antwoord->getUpvotes() + 1);
@@ -123,7 +127,7 @@ class VoteController extends AbstractController
         return $this->json([
             'upvotes'   => $antwoord->getUpvotes(),
             'downvotes' => $antwoord->getDownvotes(),
-            'userVote'  => $bestaand && $bestaand->getType() === $type ? null : $type,
+            'userVote'  => $newUserVote,
         ]);
     }
 }
