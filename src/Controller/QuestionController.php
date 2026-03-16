@@ -76,7 +76,12 @@ class QuestionController extends AbstractController
     #[Route('/anwser-question/{id}', name: 'anwser-question')]
     public function anwserQuestion(int $id, VragenRepository $vragenRepository, Request $request, StemmenRepository $stemmenRepository, ProfielRepository $profielRepository): Response
     {
-        $vraag     = $vragenRepository->find($id);
+        $vraag = $vragenRepository->find($id);
+
+        if (!$vraag) {
+            throw $this->createNotFoundException('Question not found.');
+        }
+
         $profielId = $request->getSession()->get('profiel_id');
         $profiel   = $profielRepository->find($profielId);
 
