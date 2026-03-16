@@ -34,6 +34,13 @@ class AuthController extends AbstractController
 
             $profiel = $profielRepository->findOneBy(['firebaseUid' => $uid]);
 
+            if (!$profiel && $email) {
+                $profiel = $profielRepository->findOneBy(['email' => $email]);
+                if ($profiel) {
+                    $profiel->setFirebaseUid($uid);
+                }
+            }
+
             if (!$profiel) {
                 $profiel = new Profiel();
                 $profiel->setFirebaseUid($uid);
@@ -44,6 +51,7 @@ class AuthController extends AbstractController
                 $profiel->setJaar(1);
                 $em->persist($profiel);
             } else {
+                $profiel->setFirebaseUid($uid);
                 $profiel->setEmail($email);
                 if ($name) $profiel->setName($name);
             }

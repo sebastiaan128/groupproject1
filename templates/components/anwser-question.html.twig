@@ -36,7 +36,7 @@
 
                     <div class="vote-col flex flex-col items-center gap-2 shrink-0 w-14">
                         <button onclick="vote('vraag', {{ vraag.id }}, 'up', this)"
-                            class="vote-btn {{ vraagStem == 'up' ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                            class="vote-btn {{ vraagStem == 'up' ? 'active-up' : '' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                             </svg>
@@ -46,7 +46,7 @@
                             <span class="text-xs text-gray-400 dark:text-gray-500">votes</span>
                         </div>
                         <button onclick="vote('vraag', {{ vraag.id }}, 'down', this)"
-                            class="vote-btn {{ vraagStem == 'down' ? 'bg-red-500 text-white border-red-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                            class="vote-btn {{ vraagStem == 'down' ? 'active-down' : '' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                             </svg>
@@ -89,7 +89,7 @@
 
                         <div class="vote-col flex flex-col items-center gap-2 shrink-0 w-14">
                             <button onclick="vote('antwoord', {{ antwoord.id }}, 'up', this)"
-                                class="vote-btn {{ antwoordStemmen[antwoord.id] == 'up' ? 'bg-indigo-500 text-white border-indigo-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                                class="vote-btn {{ (antwoordStemmen[antwoord.id] ?? null) == 'up' ? 'active-up' : '' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                                 </svg>
@@ -99,7 +99,7 @@
                                 <span class="text-xs text-gray-400 dark:text-gray-500">votes</span>
                             </div>
                             <button onclick="vote('antwoord', {{ antwoord.id }}, 'down', this)"
-                                class="vote-btn {{ antwoordStemmen[antwoord.id] == 'down' ? 'bg-red-500 text-white border-red-600' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-300' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
+                                class="vote-btn {{ (antwoordStemmen[antwoord.id] ?? null) == 'down' ? 'active-down' : '' }} border rounded-xl p-2.5 flex items-center justify-center transition-all w-full cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                                 </svg>
@@ -152,12 +152,47 @@
     </div>
 {% endblock %}
 
+{% block stylesheets %}
+<style>
+.vote-btn {
+    background: #f3f4f6;
+    color: #6b7280;
+    border-color: #e5e7eb;
+}
+.vote-btn:hover {
+    background: #eef2ff;
+    color: #4f46e5;
+    border-color: #a5b4fc;
+}
+.dark .vote-btn {
+    background: #374151;
+    color: #9ca3af;
+    border-color: #4b5563;
+}
+.dark .vote-btn:hover {
+    background: #312e81;
+    color: #a5b4fc;
+    border-color: #4f46e5;
+}
+.vote-btn.active-up {
+    background: #6366f1 !important;
+    color: white !important;
+    border-color: #4f46e5 !important;
+}
+.vote-btn.active-down {
+    background: #ef4444 !important;
+    color: white !important;
+    border-color: #dc2626 !important;
+}
+</style>
+{% endblock %}
+
 {% block javascripts %}
 <script>
 function vote(entityType, id, direction, btn) {
-    var col    = btn.parentElement;
-    var upBtn  = col.querySelector('button:first-child');
-    var dnBtn  = col.querySelector('button:last-child');
+    var col   = btn.parentElement;
+    var upBtn = col.querySelector('button:first-child');
+    var dnBtn = col.querySelector('button:last-child');
 
     fetch('/vote/' + entityType + '/' + id + '/' + direction, { method: 'POST' })
         .then(function(r) { return r.json(); })
@@ -173,25 +208,11 @@ function vote(entityType, id, direction, btn) {
                 if (scoreEl) scoreEl.textContent = score;
             }
 
-            resetVoteBtn(upBtn);
-            resetVoteBtn(dnBtn);
-            if (data.userVote === 'up')   activateVoteBtn(upBtn, 'up');
-            if (data.userVote === 'down') activateVoteBtn(dnBtn, 'down');
+            upBtn.classList.remove('active-up', 'active-down');
+            dnBtn.classList.remove('active-up', 'active-down');
+            if (data.userVote === 'up')   upBtn.classList.add('active-up');
+            if (data.userVote === 'down') dnBtn.classList.add('active-down');
         });
-}
-
-function resetVoteBtn(btn) {
-    btn.classList.remove('bg-indigo-500', 'bg-red-500', 'text-white', 'border-indigo-600', 'border-red-600');
-    btn.classList.add('bg-gray-100', 'text-gray-500', 'border-gray-200');
-}
-
-function activateVoteBtn(btn, dir) {
-    btn.classList.remove('bg-gray-100', 'text-gray-500', 'border-gray-200');
-    if (dir === 'up') {
-        btn.classList.add('bg-indigo-500', 'text-white', 'border-indigo-600');
-    } else {
-        btn.classList.add('bg-red-500', 'text-white', 'border-red-600');
-    }
 }
 </script>
 {% endblock %}
