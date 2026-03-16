@@ -124,6 +124,40 @@
     </div>
 </div>
 
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
+    import { getDatabase, ref, onChildAdded, query, orderByChild, limitToLast } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js';
+
+    const firebaseConfig = {
+        apiKey:            "{{ firebase_api_key }}",
+        authDomain:        "{{ firebase_auth_domain }}",
+        databaseURL:       "{{ firebase_database_url }}",
+        projectId:         "{{ firebase_project_id }}",
+        storageBucket:     "{{ firebase_storage_bucket }}",
+        messagingSenderId: "{{ firebase_messaging_sender_id }}",
+        appId:             "{{ firebase_app_id }}"
+    };
+
+    const profielId = {{ app.session.get('profiel_id') ?? 'null' }};
+
+    if (profielId) {
+        const app = initializeApp(firebaseConfig, 'navbar');
+        const db  = getDatabase(app);
+        const notifRef = query(ref(db, 'notifications/' + profielId), orderByChild('gelezen'), limitToLast(20));
+
+        var badge = document.getElementById('notif-badge');
+        var initialLoad = true;
+        setTimeout(function() { initialLoad = false; }, 3000);
+
+        onChildAdded(notifRef, function(snapshot) {
+            if (initialLoad) return;
+            var data = snapshot.val();
+            if (!data || data.gelezen) return;
+            if (badge) badge.classList.remove('invisible');
+        });
+    }
+</script>
+
 <script>
     (function () {
         var btn           = document.getElementById('nav-hamburger');

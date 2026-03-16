@@ -30,6 +30,10 @@ class VoteController extends AbstractController
             return $this->json(['error' => 'Not found'], 404);
         }
 
+        if ($vraag->getProfiel()?->getId() === $profiel->getId()) {
+            return $this->json(['error' => 'Cannot vote on your own question'], 403);
+        }
+
         $bestaand = $stemmenRepository->findOneBy(['profiel' => $profiel, 'vraag' => $vraag]);
 
         if ($bestaand) {
@@ -80,6 +84,10 @@ class VoteController extends AbstractController
 
         if (!$antwoord || !$profiel) {
             return $this->json(['error' => 'Not found'], 404);
+        }
+
+        if ($antwoord->getProfiel()?->getId() === $profiel->getId()) {
+            return $this->json(['error' => 'Cannot vote on your own answer'], 403);
         }
 
         $bestaand = $stemmenRepository->findOneBy(['profiel' => $profiel, 'antwoord' => $antwoord]);

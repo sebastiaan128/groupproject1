@@ -12,6 +12,8 @@ use App\Repository\StemmenRepository;
 use App\Entity\Tags;
 use App\Entity\vragen;
 use App\Entity\Antwoorden;
+use App\Entity\Notificatie;
+use Kreait\Firebase\Factory;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\ProfielRepository;
 
@@ -74,7 +76,7 @@ class QuestionController extends AbstractController
     }
 
     #[Route('/anwser-question/{id}', name: 'anwser-question')]
-    public function anwserQuestion(int $id, VragenRepository $vragenRepository, Request $request, StemmenRepository $stemmenRepository, ProfielRepository $profielRepository): Response
+    public function anwserQuestion(int $id, VragenRepository $vragenRepository, Request $request, StemmenRepository $stemmenRepository, ProfielRepository $profielRepository, EntityManagerInterface $em): Response
     {
         $vraag = $vragenRepository->find($id);
 
@@ -84,6 +86,9 @@ class QuestionController extends AbstractController
 
         $profielId = $request->getSession()->get('profiel_id');
         $profiel   = $profielRepository->find($profielId);
+
+        $vraag->setViews($vraag->getViews() + 1);
+        $em->flush();
 
         $vraagStem = $profiel ? $stemmenRepository->findOneBy(['profiel' => $profiel, 'vraag' => $vraag]) : null;
 
@@ -149,7 +154,31 @@ class QuestionController extends AbstractController
         $antwoord->setVraag($vraag);
 
         $em->persist($antwoord);
-        $em->flush();
+
+        $vraagEigenaar = $vraag->getProfiel();
+        if ($vraagEigenaar && $vraagEigenaar->getId() !== $profiel->getId()) {
+            $notificatie = new Notificatie();
+            $notificatie->setProfiel($vraagEigenaar);
+            $notificatie->setVraag($vraag);
+            $bericht = $profiel->getName() . ' answered your question: ' . $vraag->getTitel();
+            $notificatie->setBericht($bericht);
+            $notificatie->setAangemaaktOp(new \DateTime());
+            $em->persist($notificatie);
+            $em->flush();
+
+            try {
+                $firebase = (new Factory)->withServiceAccount($_ENV['FIREBASE_CREDENTIALS_PATH']);
+                $db = $firebase->createDatabase();
+                $db->getReference('notifications/' . $vraagEigenaar->getId())->push([
+                    'bericht' => $bericht,
+                    'vraagId' => $vraag->getId(),
+                    'tijd'    => (new \DateTime())->format('d M H:i'),
+                    'gelezen' => false,
+                ]);
+            } catch (\Throwable) {}
+        } else {
+            $em->flush();
+        }
 
         return $this->redirectToRoute('anwser-question', ['id' => $vraag->getId()]);
     }
