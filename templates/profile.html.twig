@@ -4,7 +4,7 @@
 
 {% block body %}
 {{ form_start(form, {'attr': {'id': 'ProfileType'}}) }}
-<div class="main">
+<div class="main w-full sm:w-auto px-4 sm:px-0 items-center">
     <h1>My Profile</h1>
     <div class="container dark:border-gray-700 bg-white dark:bg-gray-800">
             <div>
@@ -69,7 +69,6 @@
                     <div class="container-two dark:border-gray-700 bg-white dark:bg-gray-800">
                         <h2>Knowledge Tags</h2>
 
-                        {# Huidige tags - altijd zichtbaar #}
                         <div class="flex flex-wrap gap-2 mb-3" id="tags-display">
                             {% for tag in profiel.tags %}
                             <span
@@ -81,7 +80,6 @@
                             {% endfor %}
                         </div>
 
-                        {# Tag selectie - alleen zichtbaar bij edit #}
                         <div id="tags-edit" class="hidden">
                             <div class="tags-wrapper">
                                 {{ form_widget(form.tags) }}

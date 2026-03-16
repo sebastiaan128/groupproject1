@@ -34,12 +34,10 @@ class VoteController extends AbstractController
 
         if ($bestaand) {
             if ($bestaand->getType() === $type) {
-                // Zelfde stem -> verwijder (toggle)
                 if ($type === 'up') $vraag->setUpvotes($vraag->getUpvotes() - 1);
                 else $vraag->setDownvotes($vraag->getDownvotes() - 1);
                 $em->remove($bestaand);
             } else {
-                // Andere stem -> wissel
                 if ($type === 'up') {
                     $vraag->setUpvotes($vraag->getUpvotes() + 1);
                     $vraag->setDownvotes($vraag->getDownvotes() - 1);

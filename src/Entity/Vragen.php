@@ -39,15 +39,9 @@ class Vragen
     #[ORM\Column(name: 'Status', length: 50)]
     private ?string $status = null;
 
-    /**
-     * @var Collection<int, Antwoorden>
-     */
     #[ORM\OneToMany(targetEntity: Antwoorden::class, mappedBy: 'vraag', cascade: ['remove'])]
     private Collection $antwoorden;
 
-    /**
-     * @var Collection<int, Tags>
-     */
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'vragen', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'Vraag_Tags')]
     #[ORM\JoinColumn(name: 'Vraag_ID', referencedColumnName: 'Vraag_ID')]
@@ -149,9 +143,6 @@ class Vragen
         return $this;
     }
 
-    /**
-     * @return Collection<int, Antwoorden>
-     */
     public function getAntwoorden(): Collection
     {
         return $this->antwoorden;
@@ -178,9 +169,6 @@ class Vragen
         return $this;
     }
 
-    /**
-     * @return Collection<int, Tags>
-     */
     public function getTags(): Collection
     {
         return $this->tags;

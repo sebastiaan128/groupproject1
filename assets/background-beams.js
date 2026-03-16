@@ -50,7 +50,6 @@
 
         ctx.save();
 
-        // Outer glow
         ctx.beginPath();
         ctx.moveTo(beam.x, beam.y - beam.length);
         ctx.lineTo(beam.x, beam.y);
@@ -61,7 +60,6 @@
         ctx.shadowColor = beam.color;
         ctx.stroke();
 
-        // Main beam
         ctx.beginPath();
         ctx.moveTo(beam.x, beam.y - beam.length);
         ctx.lineTo(beam.x, beam.y);
@@ -72,7 +70,6 @@
         ctx.shadowColor = beam.color;
         ctx.stroke();
 
-        // Bright core
         ctx.beginPath();
         ctx.moveTo(beam.x, beam.y - beam.length * 0.4);
         ctx.lineTo(beam.x, beam.y);
@@ -113,7 +110,6 @@
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Update beams
             for (var i = 0; i < beams.length; i++) {
                 var beam = beams[i];
                 beam.y += beam.speed;
@@ -131,7 +127,6 @@
                 }
             }
 
-            // Update particles
             for (var j = particles.length - 1; j >= 0; j--) {
                 var p = particles[j];
                 p.x += p.vx;

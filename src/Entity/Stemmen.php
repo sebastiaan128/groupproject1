@@ -29,7 +29,7 @@ class Stemmen
     private ?Antwoorden $antwoord = null;
 
     #[ORM\Column(name: 'Type', length: 4)]
-    private ?string $type = null; // 'up' or 'down'
+    private ?string $type = null;
 
     public function getId(): ?int { return $this->id; }
 

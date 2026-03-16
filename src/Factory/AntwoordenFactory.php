@@ -7,16 +7,8 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use App\Factory\VragenFactory;
 use App\Factory\ProfielFactory;
 
-/**
- * @extends PersistentProxyObjectFactory<Antwoorden>
- */
 final class AntwoordenFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
     public function __construct() {}
 
     #[\Override]
@@ -25,11 +17,6 @@ final class AntwoordenFactory extends PersistentProxyObjectFactory
         return Antwoorden::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     #[\Override]
     protected function defaults(): array|callable
     {
@@ -42,14 +29,10 @@ final class AntwoordenFactory extends PersistentProxyObjectFactory
         ];
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
-     */
     #[\Override]
     protected function initialize(): static
     {
         return $this
-            // ->afterInstantiate(function(Antwoorden $antwoorden): void {})
         ;
     }
 }

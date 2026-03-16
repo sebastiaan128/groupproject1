@@ -19,15 +19,9 @@ class Tags
     #[ORM\Column(name: 'naam', length: 50)]
     private ?string $naam = null;
 
-    /**
-     * @var Collection<int, Profiel>
-     */
     #[ORM\ManyToMany(targetEntity: Profiel::class, mappedBy: 'tags')]
     private Collection $profielen;
 
-    /**
-     * @var Collection<int, Vragen>
-     */
     #[ORM\ManyToMany(targetEntity: Vragen::class, mappedBy: 'tags')]
     private Collection $vragen;
 
@@ -54,9 +48,6 @@ class Tags
         return $this;
     }
 
-    /**
-     * @return Collection<int, Profiel>
-     */
     public function getProfielen(): Collection
     {
         return $this->profielen;
@@ -81,9 +72,6 @@ class Tags
         return $this;
     }
 
-    /**
-     * @return Collection<int, Vragen>
-     */
     public function getVragen(): Collection
     {
         return $this->vragen;

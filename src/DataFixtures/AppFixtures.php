@@ -16,7 +16,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Create unique tags first
         $tagNames = [
             'PHP', 'JavaScript', 'Python', 'Java', 'C#', 'C++', 'Rust',
             'HTML', 'CSS', 'React', 'Vue', 'Angular', 'Node.js',
@@ -35,7 +34,6 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
-        // Create 10 profiles and assign 2-5 random tags to each
         $profielen = ProfielFactory::createMany(10);
         foreach ($profielen as $profiel) {
             $shuffledTags = $tags;
@@ -47,7 +45,6 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
-        // Create 20 questions and assign 2-4 random tags to each  
         $vragen = VragenFactory::createMany(20);
         foreach ($vragen as $vraag) {
             $shuffledTags = $tags;
@@ -59,7 +56,6 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
-        // Create 30 answers
         AntwoordenFactory::createMany(30);
 
         $manager->flush();

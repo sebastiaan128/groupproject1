@@ -48,7 +48,7 @@
                         </button>
                     {% endfor %}
                 </div>
-                <button id="clear-filter" class="mt-3 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors text-left">
+                <button id="clear-filter" class="hidden mt-3 text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors text-left">
                     ✕ Clear filter
                 </button>
             </div>
@@ -195,27 +195,36 @@
         document.querySelectorAll('button[data-tag]').forEach(function(btn) {
             btn.className = TAG_OFF;
         });
+        updateClearFilter();
         reset();
     });
 
     var TAG_OFF = 'tag-btn text-xs font-medium px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all';
     var TAG_ON  = 'tag-btn text-xs font-medium px-2.5 py-1 rounded-full border border-indigo-500 bg-indigo-500 text-white transition-all';
 
+    const clearFilter = document.getElementById('clear-filter');
+
+    function updateClearFilter() {
+        clearFilter.classList.toggle('hidden', !selectedTag && searchInput.value.trim() === '');
+    }
+
     window.selectTag = function (tagNaam) {
         selectedTag = selectedTag === tagNaam ? null : tagNaam;
         document.querySelectorAll('button[data-tag]').forEach(function(btn) {
             btn.className = btn.getAttribute('data-tag') === selectedTag ? TAG_ON : TAG_OFF;
         });
+        updateClearFilter();
         reset();
     };
 
-    document.getElementById('clear-filter').addEventListener('click', function () {
+    clearFilter.addEventListener('click', function () {
         selectedTag = null;
         searchInput.value = '';
         updateClearBtn();
         document.querySelectorAll('button[data-tag]').forEach(function(btn) {
             btn.className = TAG_OFF;
         });
+        updateClearFilter();
         reset();
     });
 

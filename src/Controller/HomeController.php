@@ -15,14 +15,12 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(Request $request, ProfielRepository $profielRepository, VragenRepository $vragenRepository, AntwoordenRepository $antwoordenRepository): Response
     {
-        // Recente vragen (5 nieuwste op basis van id)
         $recenteVragen = $vragenRepository->createQueryBuilder('v')
             ->orderBy('v.id', 'DESC')
             ->setMaxResults(5)
             ->getQuery()
             ->getResult();
 
-        // Leaderboard punten berekenen (zelfde logica als LeaderboardController)
         $antwoorden = $antwoordenRepository->createQueryBuilder('a')
             ->select('a', 'p', 'v')
             ->join('a.profiel', 'p')
@@ -51,14 +49,12 @@ class HomeController extends AbstractController
             }
         }
 
-        // Top 3 leaderboard
         $profielen = $profielRepository->findAll();
         usort($profielen, function ($a, $b) use ($punten) {
             return ($punten[$b->getId()] ?? 0) <=> ($punten[$a->getId()] ?? 0);
         });
         $top3 = array_slice($profielen, 0, 3);
 
-        // Persoonlijke stats van ingelogde gebruiker
         $currentProfielId = $request->getSession()->get('profiel_id');
         $mijnProfiel = $currentProfielId ? $profielRepository->find($currentProfielId) : null;
 
@@ -82,6 +78,7 @@ class HomeController extends AbstractController
             'mijn_profiel'    => $mijnProfiel,
             'mijn_punten'     => $mijnProfiel ? ($punten[$mijnProfiel->getId()] ?? 0) : 0,
             'mijn_rank'       => $mijnRank,
+            'is_guest'        => (bool) $request->getSession()->get('is_guest'),
         ]);
     }
 }

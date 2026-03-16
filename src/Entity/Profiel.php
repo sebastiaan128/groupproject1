@@ -38,21 +38,12 @@ class Profiel
     #[ORM\Column(name: 'CreatedAt', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @var Collection<int, Vragen>
-     */
     #[ORM\OneToMany(targetEntity: Vragen::class, mappedBy: 'profiel', cascade: ['remove'])]
     private Collection $vragen;
 
-    /**
-     * @var Collection<int, Antwoorden>
-     */
     #[ORM\OneToMany(targetEntity: Antwoorden::class, mappedBy: 'profiel', cascade: ['remove'])]
     private Collection $antwoorden;
 
-    /**
-     * @var Collection<int, Tags>
-     */
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'profielen', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'Profiel_Tags')]
     #[ORM\JoinColumn(name: 'Profiel_ID', referencedColumnName: 'Profiel_ID')]
@@ -131,9 +122,6 @@ class Profiel
         return $this;
     }
 
-    /**
-     * @return Collection<int, Vragen>
-     */
     public function getVragen(): Collection
     {
         return $this->vragen;
@@ -160,9 +148,6 @@ class Profiel
         return $this;
     }
 
-    /**
-     * @return Collection<int, Antwoorden>
-     */
     public function getAntwoorden(): Collection
     {
         return $this->antwoorden;
@@ -189,9 +174,6 @@ class Profiel
         return $this;
     }
 
-    /**
-     * @return Collection<int, Tags>
-     */
     public function getTags(): Collection
     {
         return $this->tags;

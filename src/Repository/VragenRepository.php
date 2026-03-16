@@ -6,9 +6,6 @@ use App\Entity\Vragen;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Vragen>
- */
 class VragenRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

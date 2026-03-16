@@ -29,7 +29,6 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute('profile');
         }
     
-        // Bij fouten of gewone GET request, render de pagina opnieuw
         return $this->render('profile.html.twig', [
             'form' => $form,
             'profiel' => $profiel,
