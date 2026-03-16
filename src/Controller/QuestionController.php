@@ -146,6 +146,10 @@ class QuestionController extends AbstractController
         $profiel = $profielRepository->find($profielId);
         $vraag = $vragenRepository->find($request->request->get('vraag_id'));
 
+        if (!$vraag || !$profiel) {
+            return $this->redirectToRoute('questions');
+        }
+
         $antwoord = new Antwoorden();
         $antwoord->setBeschrijving($request->request->get('antwoord'));
         $antwoord->setUpvotes(0);
@@ -167,7 +171,9 @@ class QuestionController extends AbstractController
             $em->flush();
 
             try {
-                $firebase = (new Factory)->withServiceAccount($_ENV['FIREBASE_CREDENTIALS_PATH']);
+                $firebase = (new Factory)
+                    ->withServiceAccount($_ENV['FIREBASE_CREDENTIALS_PATH'])
+                    ->withDatabaseUri($_ENV['FIREBASE_DATABASE_URL']);
                 $db = $firebase->createDatabase();
                 $db->getReference('notifications/' . $vraagEigenaar->getId())->push([
                     'bericht' => $bericht,
