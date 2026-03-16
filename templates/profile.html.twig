@@ -3,6 +3,24 @@
 {% block title %}My Profile{% endblock %}
 
 {% block body %}
+
+{# SQL injection caught popup #}
+<div id="sqli-overlay" class="hidden fixed inset-0 z-[999] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div class="relative bg-gray-900 border border-red-500 rounded-2xl shadow-2xl max-w-sm w-full mx-4 p-8 flex flex-col items-center gap-4 text-center">
+        <div class="w-16 h-16 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-black text-white tracking-tight">Nice try. 🖕</h2>
+        <p class="text-gray-300 text-sm leading-relaxed">We see what you're doing.<br>SQL injection doesn't work here.<br><span class="text-red-400 font-semibold">Go touch some grass.</span></p>
+        <button onclick="document.getElementById('sqli-overlay').classList.add('hidden')"
+            class="mt-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-sm transition-colors">
+            Fine, I'll behave
+        </button>
+    </div>
+</div>
+
 {{ form_start(form, {'attr': {'id': 'ProfileType'}}) }}
 <div class="main w-full sm:w-auto px-4 sm:px-0 items-center">
     <h1>My Profile</h1>
@@ -146,6 +164,33 @@
                     }
 
                     this.querySelector('h4').textContent = isDisabled ? 'Edit' : 'Edit';
+                });
+
+                {% if sql_attempt is defined and sql_attempt %}
+                document.getElementById('sqli-overlay').classList.remove('hidden');
+                {% endif %}
+
+                var sqliPatterns = [
+                    /('|--|;|\/\*|\*\/)/i,
+                    /\b(select|insert|update|delete|drop|union|exec|execute|create|alter|truncate|cast|convert|declare)\b/i,
+                    /\b(or|and)\s+[\w'"]+\s*=\s*[\w'"]+/i,
+                    /xp_/i,
+                    /0x[0-9a-f]+/i
+                ];
+
+                function hasSqli(val) {
+                    return sqliPatterns.some(function(p) { return p.test(val); });
+                }
+
+                document.getElementById('ProfileType').addEventListener('submit', function(e) {
+                    var inputs = this.querySelectorAll('input[type="text"], input[type="email"], textarea');
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (hasSqli(inputs[i].value)) {
+                            e.preventDefault();
+                            document.getElementById('sqli-overlay').classList.remove('hidden');
+                            return;
+                        }
+                    }
                 });
             </script>
             {% endblock %}
