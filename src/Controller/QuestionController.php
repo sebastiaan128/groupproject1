@@ -176,9 +176,11 @@ class QuestionController extends AbstractController
                 $em->persist($notificatie);
                 $em->flush();
 
+                $credPath = $_ENV['FIREBASE_CREDENTIALS_PATH'] ?? $_SERVER['FIREBASE_CREDENTIALS_PATH'] ?? getenv('FIREBASE_CREDENTIALS_PATH');
+                $dbUrl = $_ENV['FIREBASE_DATABASE_URL'] ?? $_SERVER['FIREBASE_DATABASE_URL'] ?? getenv('FIREBASE_DATABASE_URL');
                 $firebase = (new Factory)
-                    ->withServiceAccount($_ENV['FIREBASE_CREDENTIALS_PATH'])
-                    ->withDatabaseUri($_ENV['FIREBASE_DATABASE_URL']);
+                    ->withServiceAccount($credPath)
+                    ->withDatabaseUri($dbUrl);
                 $db = $firebase->createDatabase();
                 $db->getReference('notifications/' . $vraagEigenaar->getId())->push([
                     'bericht' => $bericht,
@@ -186,7 +188,9 @@ class QuestionController extends AbstractController
                     'tijd'    => (new \DateTime())->format('d M H:i'),
                     'gelezen' => false,
                 ]);
-            } catch (\Throwable) {}
+            } catch (\Throwable $e) {
+                error_log('Notification error: ' . $e->getMessage());
+            }
         }
 
         return $this->redirectToRoute('anwser-question', ['id' => $vraag->getId()]);

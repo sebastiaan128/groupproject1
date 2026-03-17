@@ -49,7 +49,11 @@ class HomeController extends AbstractController
             }
         }
 
-        $profielen = $profielRepository->findAll();
+        $profielen = $profielRepository->createQueryBuilder('p')
+            ->where('p.firebaseUid IS NULL OR p.firebaseUid NOT LIKE :guestPrefix')
+            ->setParameter('guestPrefix', 'guest_%')
+            ->getQuery()
+            ->getResult();
         usort($profielen, function ($a, $b) use ($punten) {
             return ($punten[$b->getId()] ?? 0) <=> ($punten[$a->getId()] ?? 0);
         });
