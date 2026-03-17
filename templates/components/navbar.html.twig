@@ -61,11 +61,13 @@
                     </svg>
                 </button>
                 <div id="profile-dropdown" class="hidden absolute right-0 top-full mt-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 shadow-xl rounded-2xl px-2 py-2 flex flex-col gap-0.5 text-sm min-w-[160px] z-50">
+                    {% if not app.session.get('is_guest') %}
                     <a href="{{ path('profile') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                         Profile
                     </a>
                     <div class="border-t border-gray-200 dark:border-white/10 my-1"></div>
+                    {% endif %}
                     <a href="{{ path('logout') }}" class="flex items-center gap-2 px-3 py-2 rounded-xl text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                         Logout
@@ -110,7 +112,7 @@
         <a href="{{ path('questions') }}" class="px-4 py-2 rounded-xl transition-all {% if route == 'questions' %}text-indigo-600 dark:text-indigo-400 font-semibold{% else %}hover:text-indigo-600 dark:hover:text-indigo-400{% endif %}">Questions</a>
         <a href="{{ path('leaderboard') }}" class="px-4 py-2 rounded-xl transition-all {% if route == 'leaderboard' %}text-indigo-600 dark:text-indigo-400 font-semibold{% else %}hover:text-indigo-600 dark:hover:text-indigo-400{% endif %}">Leaderboard</a>
         <div class="border-t border-gray-200 dark:border-white/10 mt-1 pt-2 flex items-center justify-between">
-            <a href="{{ path('profile') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all hover:text-indigo-600 dark:hover:text-indigo-400">
+            <a href="{{ app.session.get('is_guest') ? path('home') : path('profile') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all hover:text-indigo-600 dark:hover:text-indigo-400">
                 <div class="avatar-glass w-7 h-7 rounded-full overflow-hidden flex items-center justify-center text-xs font-semibold text-gray-700 dark:text-gray-200">
                     <img id="mobile-avatar" src="" alt="User Avatar" class="w-full h-full object-cover">
                 </div>

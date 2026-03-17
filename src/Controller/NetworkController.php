@@ -40,6 +40,8 @@ class NetworkController extends AbstractController
             ->setFirstResult(($page - 1) * self::PER_PAGE)
             ->setMaxResults(self::PER_PAGE);
 
+        $idQb->andWhere('p.firebaseUid IS NULL OR p.firebaseUid NOT LIKE :guestPrefix')->setParameter('guestPrefix', 'guest_%');
+
         if ($search !== '') {
             $idQb->andWhere('LOWER(p.name) LIKE :search')->setParameter('search', '%' . strtolower($search) . '%');
         }
@@ -63,6 +65,8 @@ class NetworkController extends AbstractController
             ->createQueryBuilder('p')
             ->select('COUNT(DISTINCT p.id)')
             ->leftJoin('p.tags', 't');
+
+        $countQb->andWhere('p.firebaseUid IS NULL OR p.firebaseUid NOT LIKE :guestPrefix')->setParameter('guestPrefix', 'guest_%');
 
         if ($search !== '') {
             $countQb->andWhere('LOWER(p.name) LIKE :search')->setParameter('search', '%' . strtolower($search) . '%');

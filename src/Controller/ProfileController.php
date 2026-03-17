@@ -33,7 +33,7 @@ class ProfileController extends AbstractController
         $profielId = $request->getSession()->get('profiel_id');
         $profiel = $profielId ? $em->getRepository(Profiel::class)->find($profielId) : null;
 
-        if (!$profiel) {
+        if (!$profiel || $request->getSession()->get('is_guest')) {
             return $this->redirectToRoute('login');
         }
 
