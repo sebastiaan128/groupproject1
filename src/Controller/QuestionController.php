@@ -150,7 +150,7 @@ class QuestionController extends AbstractController
             return $this->redirectToRoute('questions');
         }
 
-        if ($vraag->getStatus() !== 'Open') {
+        if ($vraag->getStatus() === 'Closed') {
             return $this->redirectToRoute('anwser-question', ['id' => $vraag->getId()]);
         }
 
